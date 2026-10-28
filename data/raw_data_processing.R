@@ -24,11 +24,11 @@ library(gt) #make general tables# read in raw data
 
 # Read in data
 
-slider_lab_data_raw <- read_csv("data/slider-lab-data-raw.csv")
+slider_lab_data_raw <- read_csv("data/slider_lab_data_raw.csv")
 
-slider_micro_data_raw <- read_csv("data/slider-micro-data-raw.csv")
+slider_micro_data_raw <- read_csv("data/slider_micro_data_raw.csv")
 
-slider_macro_data_raw <- read_csv("data/slider-macro-data-raw.csv")
+slider_macro_data_raw <- read_csv("data/slider_macro_data_raw.csv")
 
 # Remove extra whitespaces
 

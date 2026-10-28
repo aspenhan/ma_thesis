@@ -91,7 +91,7 @@ def_theme <- theme(plot.title = element_text(family = "serif", size = 13, hjust 
 
 # Source R script used to clean raw data
 
-source("data/raw-data-processing.R") 
+source("data/raw_data_processing.R")
 
 ```
 
@@ -101,13 +101,13 @@ source("data/raw-data-processing.R")
 
 # Write out cleaned datasets
 
-write_csv(slider_data, "data/slider-full-data-clean.csv")
+write_csv(slider_data, "data/slider_full_data_clean.csv")
 
-write_csv(slider_lab_data, "data/slider-lab-data-clean.csv")
+write_csv(slider_lab_data, "data/slider_lab_data_clean.csv")
 
-write_csv(slider_micro_data, "data/slider-micro-data-clean.csv")
+write_csv(slider_micro_data, "data/slider_micro_data_clean.csv")
 
-write_csv(slider_macro_data, "data/slider-macro-data-clean.csv")
+write_csv(slider_macro_data, "data/slider_macro_data_clean.csv")
 
 ```
 
@@ -179,7 +179,7 @@ In the task, each set was displayed on a separate page, so having multiple slide
 #| fig-with: 200
 #| fig-height: 400
 
-knitr::include_graphics("survey-screenshots/slider-task-set-example.png")
+knitr::include_graphics("survey_screenshots/slider_task_set_example.png")
 
 ```
 
@@ -1260,7 +1260,7 @@ Nevertheless, in accordance with the original analysis plan and hypothesis, this
 #| label: loss-aversion-estimation
 #| include: false
 
-source("data/loss-aversion-estimation.R")
+source("data/loss_aversion_estimation.R")
 
 ```
 
@@ -2702,50 +2702,50 @@ Since costs do not vary treatment groups given the incentive structure, the opti
 
 
 
-![Common instructions for all subjects](survey-screenshots\common-instructions.png){#fig-common-instructions}
+![Common instructions for all subjects](survey_screenshots/common_instructions.png){#fig-common-instructions}
 
 
 
 
-![Treatment 1 instructions](survey-screenshots\treatment1-instructions.png){#fig-treatment1-instructions}
+![Treatment 1 instructions](survey_screenshots/treatment1_instructions.png){#fig-treatment1-instructions}
 
 
 
-![Treatment 2 instructions](survey-screenshots\treatment2-instructions.png){#fig-treatment2-instructions}
+![Treatment 2 instructions](survey_screenshots/treatment2_instructions.png){#fig-treatment2-instructions}
 
 
 
-![Treatment 3 instructions](survey-screenshots\treatment3-instructions.png){#fig-treatment3-instructions}
+![Treatment 3 instructions](survey_screenshots/treatment3_instructions.png){#fig-treatment3-instructions}
 
 
 
-![Treatment 4 instructions](survey-screenshots\treatment4-instructions.png){#fig-treatment4-instructions}
+![Treatment 4 instructions](survey_screenshots/treatment4_instructions.png){#fig-treatment4-instructions}
 
 
 
-![Comprehension check: last question only for treatments 2 and 3](survey-screenshots/comprehension-check.png){#fig-compre-check}
+![Comprehension check: last question only for treatments 2 and 3](survey_screenshots/comprehension_check.png){#fig-compre-check}
 
 
 
-![Task reflection page 1](survey-screenshots\task-reflection-1.png){#fig-task-reflection-1}
+![Task reflection page 1](survey_screenshots/task_reflection_1.png){#fig-task-reflection-1}
 
 
 
-![Task reflection page 2](survey-screenshots\task-reflection-2.png){#fig-task-reflection-2}
+![Task reflection page 2](survey_screenshots/task_reflection_2.png){#fig-task-reflection-2}
 
 
 
-![Demographic survey page 1](survey-screenshots\demographic-survey-1.png){#fig-demographic-survey-1}
+![Demographic survey page 1](survey_screenshots/demographic_survey_1.png){#fig-demographic-survey-1}
 
 
 
-![Demographic survey page 2](survey-screenshots\demographic-survey-2.png){#fig-demographic-survey-2}
+![Demographic survey page 2](survey_screenshots/demographic_survey_2.png){#fig-demographic-survey-2}
 
 
 
-![Loss aversion survey page 1: pages and payment structures presented in random order](survey-screenshots\loss-aversion-survey-1.png){#fig-loss-aversion-survey-1}
+![Loss aversion survey page 1: pages and payment structures presented in random order](survey_screenshots/loss_aversion_survey_1.png){#fig-loss-aversion-survey-1}
 
 
 
-![Loss aversion survey page 2: pages and payment structures presented in random order](survey-screenshots\loss-aversion-survey-2.png){#fig-loss-aversion-survey-2}
+![Loss aversion survey page 2: pages and payment structures presented in random order](survey_screenshots/loss_aversion_survey_2.png){#fig-loss-aversion-survey-2}
 

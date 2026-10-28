@@ -6,10 +6,10 @@ This paper seeks to investigate the effects of conflicting reference points acro
 
 ## **Repository structure**
 
-* thesis-manuscript.qmd: quarto manuscript of research paper
-* thesis-manuscript.pdf: pdf file of research paper rendered from the quarto manuscript
-* thesis-manuscript.tex: latex intermediate output rendered from the quarto manuscript
+* thesis_manuscript.qmd: quarto manuscript of research paper
+* thesis_manuscript.pdf: pdf file of research paper rendered from the quarto manuscript
+* thesis_manuscript.tex: latex intermediate output rendered from the quarto manuscript
 * data: folder contains raw and processed data files, along with associated coding files used for data cleaning and wrangling
-* survey-screenshots: folder contains screenshots of Qualtrics survey
-* thesis-manuscript_files/figure-pdf: folder containing figures produced for the manuscript
+* survey_screenshots: folder contains screenshots of Qualtrics survey
+* thesis_manuscript_files/figure_pdf: folder containing figures produced for the manuscript
 * bibliography.bib: BibTeX file containing citations for research
