@@ -6,3 +6,12 @@
 .httr-oauth
 .DS_Store
 .quarto
+
+# Data
+
+data/*
+
+# Personal use files
+
+thesis_manuscript_files/
+ma_thesis_commented.pdf
