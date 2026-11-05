@@ -1,28 +1,13 @@
-# Load packages
+# Clean the raw Qualtrics data from the lab, microeconomics class and macroeconomics class samples
+# Outputs: data/slider_*_data_clean.csv (readable copies) and data/*.rds (keeping factor levels, read by the analysis scripts)
 
-## Data reading and writing, transformation, and visualisation
+# ----- Setup -----
 
-library(tidyverse)
-library(readxl) #read excel data
-library(broom) #turns function output into tidy tibbles
+# Load packages and helpers, unless already done by code/run_all.R
 
-## Statistical analysis
+if (!exists("run_all")) source("code/setup.R")
 
-library(DescTools) #descriptive stats
-library(car) #basic regression analysis
-library(sandwich) #estimate robust errors
-library(estimatr) #run robust and other more complex regressions and analysis
-library(nnet) #run multinomial logistic regressions
-library(fixest) #run fixed effects regressions
-library(lmtest) #run diagnostic tests on linear models
-
-## Tables
-
-library(texreg) #make regression tables
-library(gtsummary) #make summary stats tables
-library(gt) #make general tables# read in raw data
-
-# Read in data
+# ----- Read in data -----
 
 slider_lab_data_raw <- read_csv("data/slider_lab_data_raw.csv")
 
@@ -30,7 +15,9 @@ slider_micro_data_raw <- read_csv("data/slider_micro_data_raw.csv")
 
 slider_macro_data_raw <- read_csv("data/slider_macro_data_raw.csv")
 
-# Remove extra whitespaces
+# ----- Tidy and merge samples -----
+
+## ----- Remove extra whitespaces -----
 
 slider_lab_data <- slider_lab_data_raw %>%
   rename_with(str_squish) %>%
@@ -44,7 +31,7 @@ slider_macro_data <- slider_macro_data_raw %>%
   rename_with(str_squish) %>%
   mutate(across(where(is.character), str_squish))
 
-# Rename column headers
+## ----- Rename column headers -----
 
 slider_lab_data <- slider_lab_data %>%
   rename(gender = Q9.1,
@@ -152,6 +139,8 @@ slider_macro_data <- slider_macro_data %>%
          treatment4_instructions_time = `Q23.1_Page Submit`) %>%
   rename_with(str_to_lower)
 
+## ----- Remove non-observations -----
+
 # Remove first two rows (non-observations) from each dataset
 
 slider_lab_data <- slider_lab_data[-1:-2, ]
@@ -165,6 +154,8 @@ slider_macro_data <- slider_macro_data[-1:-2, ]
 slider_lab_data <- slider_lab_data %>%
   filter(var_ses != "test" & var_ses != 79061) %>%
   select(-var_ses)
+
+## ----- Merge samples -----
 
 # Create variable to distinguish each dataset by their samples before merging
 
@@ -187,11 +178,13 @@ slider_data <- slider_data_full %>%
   filter(finished == "True") %>%
   select(-finished)
 
+# ----- Convert data types -----
+
 # Inspect data structure and convert to desired data types
 
 str(slider_data)
 
-# Convert to factors
+## ----- Convert to factors -----
 
 slider_data <- slider_data %>%
   mutate(recordeddate = as.POSIXct(recordeddate, format = "%Y-%m-%d %H:%M:%S"),
@@ -220,19 +213,23 @@ slider_data <- slider_data %>%
          targets_explanation_help = factor(targets_explanation_help, levels = c("No", "Yes")),
          sample = factor(sample))
 
+## ----- Convert to numeric -----
+
 # Convert to numerical only for variables which either have numerical values or NA
 
 slider_data <- slider_data %>%
   mutate(across(where(is.character), ~ {
     converted <- suppressWarnings(as.numeric(.))
     if (all(is.na(.) | !is.na(converted))) converted else .
-  })) 
+  }))
 
 str(slider_data)
 
+# ----- Fix numeric variables with non-numeric responses -----
+
 # Check why some variables which are supposed to be numeric have non-numeric values and rectify them
 
-## Age
+## ----- Age -----
 
 unique(slider_data$age)
 
@@ -241,7 +238,7 @@ slider_data <- slider_data %>%
 
 slider_data$age <- as.numeric(slider_data$age)
 
-## Speed and accuracy goals
+## ----- Speed and accuracy goals -----
 
 unique(slider_data$sets_completed_goal)
 
@@ -251,13 +248,13 @@ unique(slider_data$mistakes_goal)
 #If the response only contains one number, extract that
 #If the response contains multiple numbers (max is 2), then we treat on a case by case basis
 
-### Speed goal
+### ----- Speed goal -----
 
-### Extract first number from all responses
+# Extract first number from all responses
 
 sets_goal_firstnumber <- as.numeric(str_extract(slider_data$sets_completed_goal, "\\d+"))
 
-### Extract responses with two numbers
+# Extract responses with two numbers
 
 sets_goal_multinumber <- as_tibble(str_match(slider_data$sets_completed_goal, "(\\d+)\\D+(\\d+)"))
 
@@ -273,15 +270,17 @@ sets_goal_multinumber <- sets_goal_multinumber %>%
     TRUE ~ (V2 + V3)/2
   ))
 
-### For responses with two numbers, replace the first number extracted with the value derived from the two number response
+# For responses with two numbers, replace the first number extracted with the value derived from the two number response
 
 sets_goal_numeric <- coalesce(sets_goal_multinumber$sets_goal_numeric, sets_goal_firstnumber)
-  
-### Replace sets_completed_goal values in the original datset
+
+# Replace sets_completed_goal values in the original datset
 
 slider_data$sets_completed_goal <- sets_goal_numeric
 
-### Now repeat the same process for mistakes_goals
+### ----- Mistakes goal -----
+
+# Now repeat the same process for mistakes_goals
 
 mistakes_goal_firstnumber <- as.numeric(str_extract(slider_data$mistakes_goal, "\\d+"))
 
@@ -302,9 +301,11 @@ mistakes_goal_numeric <- coalesce(mistakes_goal_multinumber$mistakes_goal_numeri
 
 slider_data$mistakes_goal <- mistakes_goal_numeric
 
-## Loss aversion survey: number of correctly completed sets one is willing to do under different piece rates
+## ----- Loss aversion survey -----
 
-### Fixed payment
+# Number of correctly completed sets one is willing to do under different piece rates
+
+### ----- Fixed payment -----
 
 unique(slider_data$fix_20)
 #Same issues of ~, %, some ranges, and "none" in responses for fixed payments, so can amend them together
@@ -319,12 +320,12 @@ slider_data <- slider_data %>%
   new <- str_replace_all(new, "[~%]", "")
   new <- str_replace_all(new, "(?i)^none$", "0")
   new
-  })) 
+  }))
 
 slider_data <- slider_data %>%
   mutate(across(fix_5:fix_20, ~ as.numeric(.)))
 
-### Randomised payment
+### ----- Randomised payment -----
 
 unique(slider_data$random_20)
 #Responses with more than one number mostly misinterpret the question; e.g. they specify effort ex post under each piece rate realisation instead of ex ante, or they choose the more preferred piece rate (which is kind of no shit), so they are invalidated.
@@ -349,6 +350,10 @@ slider_data <- slider_data %>%
 
 str(slider_data)
 
+# ----- Recategorise covariates -----
+
+## ----- Race -----
+
 # Recategorise responses for race_other and merge into race
 
 unique(slider_data$race)
@@ -370,12 +375,16 @@ slider_data <- slider_data %>%
 
 levels(slider_data$race)
 
+## ----- Age -----
+
 # Convert age from year of birth to years old
 
 slider_data <- slider_data %>%
   mutate(age = 2025 - age)
 
 str(slider_data$age)
+
+## ----- Education -----
 
 # Rename responses for edu
 
@@ -385,6 +394,8 @@ slider_data <- slider_data %>%
   mutate(edu = if_else(edu == "College/ university degree or equivalent or above",
                        "College degree or above",
                        edu))
+
+## ----- Occupation -----
 
 # Rename responses for occupation, recategorise responses for occupation_other and merge
 
@@ -416,6 +427,8 @@ slider_data <- slider_data %>%
 
 levels(slider_data$occupation)
 
+## ----- Class sample covariates -----
+
 # Fill in education, econ, and occupation for class sample
 
 slider_data <- slider_data %>%
@@ -432,10 +445,14 @@ slider_data <- slider_data %>%
 
 levels(slider_data$occupation)
 
+## ----- Reasons for ignoring targets -----
+
 # Summarise responses for targets_ignore_reason_other and merge into targets_ignore_reason
 
 unique(slider_data$targets_ignore_reason_other)
 #Inherent prioritisation of accuracy over speed, greater perceived control over accuracy than speed, risk aversion towards getting the strict vs lenient criterion, forgot about/ constrained by time
+
+# ----- Create performance variables -----
 
 # Create variable for completion proportion
 
@@ -457,7 +474,7 @@ slider_data <- slider_data %>%
 slider_data <- slider_data %>%
   mutate(recorded_mistake_rate = if_else(criterion == "lenient", mistake_rate/ 4, mistake_rate))
 
-# Subset data for each sample
+# ----- Subset data by sample -----
 
 slider_lab_data <- slider_data %>%
   filter(sample == "lab")
@@ -468,3 +485,34 @@ slider_micro_data <- slider_data %>%
 slider_macro_data <- slider_data %>%
   filter(sample == "macro")
 
+# Merge class samples
+
+slider_class_data <- rbind(slider_micro_data, slider_macro_data)
+
+# ----- Write out cleaned datasets -----
+
+## ----- CSV -----
+
+write_csv(slider_data, "data/slider_full_data_clean.csv")
+
+write_csv(slider_lab_data, "data/slider_lab_data_clean.csv")
+
+write_csv(slider_micro_data, "data/slider_micro_data_clean.csv")
+
+write_csv(slider_macro_data, "data/slider_macro_data_clean.csv")
+
+## ----- RDS -----
+
+# RDS keeps the factor levels and reference categories set above, so the analysis scripts read these
+
+write_rds(slider_data, "data/slider_full_data_clean.rds")
+
+write_rds(slider_lab_data, "data/slider_lab_data_clean.rds")
+
+write_rds(slider_micro_data, "data/slider_micro_data_clean.rds")
+
+write_rds(slider_macro_data, "data/slider_macro_data_clean.rds")
+
+write_rds(slider_class_data, "data/slider_class_data_clean.rds")
+
+write_rds(slider_data_full, "data/slider_all_respondents_data.rds") #including those who did not finish

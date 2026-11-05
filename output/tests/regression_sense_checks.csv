@@ -1,0 +1,2 @@
+max_sets_completed,min_mistake_rate,explanation_not_helpful,explanation_responses,treatment1_instructions_time,treatment2_instructions_time,treatment3_instructions_time,treatment4_instructions_time,lambda_above_bound,lambda_below_bound,lambda_estimated
+41,0,107,285,12.21405617977528,59.336825503355705,52.32498648648649,143.29819760479043,72,176,503

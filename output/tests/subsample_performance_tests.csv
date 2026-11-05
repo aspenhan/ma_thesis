@@ -1,0 +1,16 @@
+test,statistic,p.value,method
+Sets attempted: F test,24.32746364575458,1.003584969768181e-10,One-way analysis of means (not assuming equal variances)
+Sets attempted: Shapiro-Wilk,0.9843309867094245,2.2261507857274307e-6,Shapiro-Wilk normality test
+Sets attempted: Kruskal-Wallis,46.086937658121606,9.825363886601463e-11,Kruskal-Wallis rank sum test
+Sets completed: F test,23.212608607867978,2.763262242101844e-10,One-way analysis of means (not assuming equal variances)
+Sets completed: Shapiro-Wilk,0.9948195798552398,0.028788812253913047,Shapiro-Wilk normality test
+Sets completed: Kruskal-Wallis,44.92783826539194,1.7540577133280186e-10,Kruskal-Wallis rank sum test
+Mistake rate: F test,0.006214219113226849,0.9938051412444298,One-way analysis of means (not assuming equal variances)
+Mistake rate: Shapiro-Wilk,0.480187285091623,1.6366385099252687e-39,Shapiro-Wilk normality test
+Mistake rate: Kruskal-Wallis,2.4698285517451684,0.29085969499272624,Kruskal-Wallis rank sum test
+Sets attempted: micro vs macro,-0.42104460450442166,0.6739398420595182,Welch Two Sample t-test
+Sets attempted: micro vs lab,6.003252026671801,4.079677376608584e-9,Welch Two Sample t-test
+Sets attempted: macro vs lab,6.20007589466277,1.3870318520919173e-9,Welch Two Sample t-test
+Sets completed: micro vs macro,-0.8752598156007142,0.38195415037318514,Welch Two Sample t-test
+Sets completed: micro vs lab,5.777897063990276,1.4659051517408379e-8,Welch Two Sample t-test
+Sets completed: macro vs lab,6.184152159186743,1.5217478665923636e-9,Welch Two Sample t-test

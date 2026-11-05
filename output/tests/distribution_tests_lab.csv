@@ -1,0 +1,15 @@
+test,statistic,p.value,method
+Sets completed: all treatments,3.3989542251257756,0.3341058108726246,Kruskal-Wallis rank sum test
+Mistake rate: all treatments,0.09171828020256687,0.9928123951189078,Kruskal-Wallis rank sum test
+Sets completed: 1 vs 2,0.22380952380952382,0.05956646786591163,Exact two-sample Kolmogorov-Smirnov test
+Sets completed: 1 vs 3,0.10769230769230764,0.7367754281984054,Exact two-sample Kolmogorov-Smirnov test
+Sets completed: 1 vs 4,0.23205128205128203,0.04703221999641152,Exact two-sample Kolmogorov-Smirnov test
+Sets completed: 2 vs 3,0.19740973312401888,0.16032309173965217,Exact two-sample Kolmogorov-Smirnov test
+Sets completed: 2 vs 4,0.06279434850863426,0.9860986198747268,Exact two-sample Kolmogorov-Smirnov test
+Sets completed: 3 vs 4,0.19230769230769232,0.18758203073268603,Exact two-sample Kolmogorov-Smirnov test
+Mistake rate: 1 vs 2,0.06462585034013599,0.9706547279755401,Exact two-sample Kolmogorov-Smirnov test
+Mistake rate: 1 vs 3,0.0897435897435897,0.813648727498625,Exact two-sample Kolmogorov-Smirnov test
+Mistake rate: 1 vs 4,0.056410256410256474,0.9879924095834036,Exact two-sample Kolmogorov-Smirnov test
+Mistake rate: 2 vs 3,0.09890109890109881,0.7737203703438706,Exact two-sample Kolmogorov-Smirnov test
+Mistake rate: 2 vs 4,0.0890894819466247,0.8630276949262877,Exact two-sample Kolmogorov-Smirnov test
+Mistake rate: 3 vs 4,0.07692307692307693,0.9674800782362493,Exact two-sample Kolmogorov-Smirnov test

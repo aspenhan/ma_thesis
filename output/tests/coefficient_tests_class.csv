@@ -1,0 +1,7 @@
+outcome,model,p.value
+Accuracy target,Model 3,0.7120252781579379
+Accuracy target,Model 4,0.32040528656628253
+Mistake rate,Model 3,0.34797262660753914
+Mistake rate,Model 4,0.07327169598903734
+Sets completed,Model 3,0.6003252657893713
+Sets completed,Model 4,0.5896973503290818

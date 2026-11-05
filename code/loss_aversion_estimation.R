@@ -1,3 +1,18 @@
+# Estimate each subject's loss aversion from the post-task survey, following Campos-Mercade et al. (2024)
+# Outputs: data/slider_full_data_loss_aversion.csv and .rds (cleaned data with loss aversion estimates, read by code/regression_test.R)
+
+# ----- Setup -----
+
+# Load packages and helpers, unless already done by code/run_all.R
+
+if (!exists("run_all")) source("code/setup.R")
+
+# ----- Load data -----
+
+slider_data <- read_rds("data/slider_full_data_clean.rds")
+
+# ----- Prepare loss aversion survey data -----
+
 # Make an id variable for each column
 
 slider_data <- slider_data %>%
@@ -37,7 +52,9 @@ loss_aversion_data <- loss_aversion_data %>%
          wage_ratio = w_spread / w_mean) %>%
   filter(!is.na(effort))
 
-# Estimate loss aversion reduced form 
+# ----- Estimate loss aversion -----
+
+## ----- Reduced form -----
 
 loss_aversion_reduced_form <- loss_aversion_data %>%
   group_by(id) %>%
@@ -54,11 +71,11 @@ reduced_form_estimates <- loss_aversion_reduced_form %>%
 loss_aversion_data <- loss_aversion_data %>%
   left_join(reduced_form_estimates, by = "id")
 
-# Calculate structural estimates
+## ----- Structural estimates -----
 
 loss_aversion_data <- loss_aversion_data %>%
   mutate(L_i = -1*L_i)
-  
+
 loss_aversion_data <- loss_aversion_data %>%
   mutate(lambda_i = 1 + (4 * L_i / K_i),
          lambda_i_adj = case_when(
@@ -67,9 +84,14 @@ loss_aversion_data <- loss_aversion_data %>%
            TRUE ~ lambda_i
          ))
 
-# Merge back into slider data
+# ----- Merge back into slider data -----
 
 slider_data <- slider_data %>%
   left_join(loss_aversion_data %>% select(id, J_i: lambda_i_adj), by = "id") %>%
   distinct(id, .keep_all = TRUE)
 
+# ----- Write out data with loss aversion estimates -----
+
+write_csv(slider_data, "data/slider_full_data_loss_aversion.csv")
+
+write_rds(slider_data, "data/slider_full_data_loss_aversion.rds")

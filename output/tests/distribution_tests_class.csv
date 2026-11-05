@@ -1,0 +1,15 @@
+test,statistic,p.value,method
+Sets completed: all treatments,4.126614405882121,0.24811264720146795,Kruskal-Wallis rank sum test
+Mistake rate: all treatments,15.418770592392168,0.0014915980585018633,Kruskal-Wallis rank sum test
+Sets completed: 1 vs 2,0.16711864406779658,0.09725339129678888,Asymptotic two-sample Kolmogorov-Smirnov test
+Sets completed: 1 vs 3,0.14583333333333334,0.21022507481230418,Asymptotic two-sample Kolmogorov-Smirnov test
+Sets completed: 1 vs 4,0.11407516580692703,0.4346230213217709,Asymptotic two-sample Kolmogorov-Smirnov test
+Sets completed: 2 vs 3,0.1233333333333333,0.26290492873001203,Exact two-sample Kolmogorov-Smirnov test
+Sets completed: 2 vs 4,0.07826086956521738,0.898624000888367,Asymptotic two-sample Kolmogorov-Smirnov test
+Sets completed: 3 vs 4,0.07028985507246373,0.9582917293127627,Asymptotic two-sample Kolmogorov-Smirnov test
+Mistake rate: 1 vs 2,0.07881355932203388,0.8897895833024094,Asymptotic two-sample Kolmogorov-Smirnov test
+Mistake rate: 1 vs 3,0.2639477401129944,0.0012525313003817933,Asymptotic two-sample Kolmogorov-Smirnov test
+Mistake rate: 1 vs 4,0.04907885040530584,0.9989853771647853,Asymptotic two-sample Kolmogorov-Smirnov test
+Mistake rate: 2 vs 3,0.21375000000000002,0.013278437828772346,Exact two-sample Kolmogorov-Smirnov test
+Mistake rate: 2 vs 4,0.0634782608695652,0.9823628045913669,Asymptotic two-sample Kolmogorov-Smirnov test
+Mistake rate: 3 vs 4,0.2546195652173913,0.0022629715211511725,Asymptotic two-sample Kolmogorov-Smirnov test

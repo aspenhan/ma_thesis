@@ -1,0 +1,33 @@
+
+\begin{tabular}{l c c}
+\hline
+ & \multicolumn{2}{c}{Log odds of achieving accuracy target} \\
+\cline{2-3}
+ & Model 3 & Model 4 \\
+\hline
+(Intercept)                & $3.88^{***}$  & $3.12^{*}$    \\
+                           & $(0.84)$      & $(1.21)$      \\
+treatment2                 & $-1.09$       & $-1.25$       \\
+                           & $(0.59)$      & $(0.68)$      \\
+treatment3                 & $-0.33$       & $-0.39$       \\
+                           & $(0.38)$      & $(0.43)$      \\
+treatment4                 & $-0.37$       & $-0.29$       \\
+                           & $(0.52)$      & $(0.57)$      \\
+criterionstrict            & $-2.35^{***}$ & $-2.61^{***}$ \\
+                           & $(0.52)$      & $(0.59)$      \\
+lambda\_i\_adj             & $-0.11$       & $-0.13$       \\
+                           & $(0.10)$      & $(0.12)$      \\
+treatment2\_lambda\_i\_adj & $0.36$        & $0.42$        \\
+                           & $(0.28)$      & $(0.30)$      \\
+\hline
+Baselines                  & Yes           & Yes           \\
+Covariates                 & No            & Yes           \\
+\hline
+AIC                        & $309.89$      & $302.22$      \\
+BIC                        & $352.10$      & $430.29$      \\
+Log Likelihood             & $-144.95$     & $-120.11$     \\
+Num. obs.                  & $503$         & $460$         \\
+\hline
+\multicolumn{3}{l}{\scriptsize{$^{***}p<0.001$; $^{**}p<0.01$; $^{*}p<0.05$}}
+\end{tabular}
+
