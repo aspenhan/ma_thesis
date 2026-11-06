@@ -1,8 +1,8 @@
 # Sample descriptive statistics: sample sizes, covariate balance tables and joint balance tests,
 # slider task performance summary tables, and tests of performance differences between subsamples
 # Outputs: output/tables/covariates_sumstats_*.tex, output/tables/performance_sumstats_*.tex,
-#          output/numbers/descriptive_numbers.tex, output/tests/balance_tests.csv,
-#          output/tests/subsample_performance_tests.csv
+#          output/numbers/descriptive_numbers.tex (numbers cited in the text),
+#          results/numbers_in_paper/balance_tests.csv, results/numbers_in_paper/subsample_performance_tests.csv
 
 # ----- Setup -----
 
@@ -299,9 +299,9 @@ balance_tests <- list(lab = balance_test_lab, micro = balance_test_micro,
   map(~ tibble(chisq = .x$Chisq[2], df = .x$Df[2], p.value = .x$"Pr(>Chisq)"[2])) %>%
   bind_rows(.id = "sample")
 
-balance_tests
+print(balance_tests)
 
-write_csv(balance_tests, "output/tests/balance_tests.csv")
+write_csv(balance_tests, "results/numbers_in_paper/balance_tests.csv")
 
 # ----- Slider task performance summary tables -----
 
@@ -413,13 +413,17 @@ subsample_performance_tests <- list(
   ) %>%
   tidy_tests()
 
-subsample_performance_tests
+print(subsample_performance_tests, n = Inf)
 
-write_csv(subsample_performance_tests, "output/tests/subsample_performance_tests.csv")
+write_csv(subsample_performance_tests, "results/numbers_in_paper/subsample_performance_tests.csv")
 
 # ----- Numbers cited in the text -----
 
-write_tex_macros(c(sample_sizes,
-                   BalanceLabChisq = round(balance_test_lab$Chisq[2], 2),
-                   BalanceLabPval = round(balance_test_lab$"Pr(>Chisq)"[2], 2)),
+# Joint balance tests for each sample (e.g. BalanceLabChisq and BalanceLabPval)
+
+balance_test_macros <- c(
+  set_names(as.list(round(balance_tests$chisq, 2)), str_c("Balance", str_to_title(balance_tests$sample), "Chisq")),
+  set_names(as.list(format_p_value(balance_tests$p.value)), str_c("Balance", str_to_title(balance_tests$sample), "Pval")))
+
+write_tex_macros(c(sample_sizes, balance_test_macros),
                  "output/numbers/descriptive_numbers.tex")

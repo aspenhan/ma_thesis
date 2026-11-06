@@ -2,7 +2,7 @@
 # target achievement, mistake rate and sets completed, tests of equality of treatment coefficients,
 # and regressions (4)-(6) interacting treatment 2 with loss aversion
 # Outputs: output/tables/reg_*.tex (main text tables and full appendix tables), output/numbers/regression_numbers.tex,
-#          output/tests/coefficient_tests_pooled.csv, output/tests/regression_sense_checks.csv
+#          results/numbers_in_paper/coefficient_tests_pooled.csv, results/numbers_in_paper/regression_sense_checks.csv
 # Lab and class sample counterparts are in code/appendix/regression_test_appendix.R
 
 # ----- Setup -----
@@ -161,9 +161,9 @@ coefficient_tests_pooled <- tibble(
               lh_p_value(reg_sets_baselines, "treatment2 = treatment3"),
               lh_p_value(reg_sets_full, "treatment2 = treatment3")))
 
-coefficient_tests_pooled
+print(coefficient_tests_pooled)
 
-write_csv(coefficient_tests_pooled, "output/tests/coefficient_tests_pooled.csv")
+write_csv(coefficient_tests_pooled, "results/numbers_in_paper/coefficient_tests_pooled.csv")
 
 # ----- Cognitive complexity treatment sense checks -----
 
@@ -270,11 +270,39 @@ regression_sense_checks <- regression_sense_checks %>%
          lambda_estimated = nrow(slider_data %>% filter(!is.na(lambda_i))))
 
 regression_sense_checks %>%
-  pivot_longer(everything())
+  pivot_longer(everything()) %>%
+  print(n = Inf)
 
-write_csv(regression_sense_checks, "output/tests/regression_sense_checks.csv")
+write_csv(regression_sense_checks, "results/numbers_in_paper/regression_sense_checks.csv")
 
 # ----- Numbers cited in the text -----
 
-write_tex_macros(list(ControlMeanSets = round(mean(slider_data$sets_completed[slider_data$treatment == 1]), 2)),
-                 "output/numbers/regression_numbers.tex")
+write_tex_macros(c(
+
+  # Mean sets completed in the control
+
+  list(ControlMeanSets = round(mean(slider_data$sets_completed[slider_data$treatment == 1]), 2)),
+
+  # Treatment 2 vs 3 coefficient tests (e.g. CoefTestPooledAccuracyTargetModelThreePval)
+
+  p_value_macros(str_c(coefficient_tests_pooled$outcome, " ", coefficient_tests_pooled$model),
+                 coefficient_tests_pooled$p.value, "CoefTestPooled"),
+
+  # Cognitive complexity treatment sense checks
+
+  with(regression_sense_checks, list(
+    ExplanationNotHelpful = explanation_not_helpful,
+    ExplanationResponses = explanation_responses,
+    InstructionsTimeTreatmentOne = sprintf("%.2f", treatment1_instructions_time),
+    InstructionsTimeTreatmentTwo = sprintf("%.2f", treatment2_instructions_time),
+    InstructionsTimeTreatmentThree = sprintf("%.2f", treatment3_instructions_time),
+    InstructionsTimeTreatmentFour = sprintf("%.2f", treatment4_instructions_time),
+
+    # Loss aversion sense checks
+
+    LambdaEstimated = lambda_estimated,
+    LambdaOutOfBounds = lambda_above_bound + lambda_below_bound,
+    LambdaAboveBound = lambda_above_bound,
+    LambdaBelowBound = lambda_below_bound))),
+
+  "output/numbers/regression_numbers.tex")

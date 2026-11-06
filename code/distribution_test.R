@@ -1,6 +1,7 @@
 # Distributional comparisons of slider task performance between treatments (pooled sample):
 # empirical CDFs, joint Kruskal-Wallis tests, and pair-wise Kolmogorov-Smirnov tests
-# Outputs: output/figures/dist_comp_*_pooled.pdf, output/tests/distribution_tests_pooled.csv
+# Outputs: output/figures/dist_comp_*_pooled.pdf, output/numbers/distribution_numbers.tex (p-values cited in the text),
+#          results/numbers_in_paper/distribution_tests_pooled.csv
 # Lab and class sample counterparts are in code/appendix/distribution_test_appendix.R
 
 # ----- Setup -----
@@ -79,6 +80,13 @@ distribution_tests_pooled <- list(
   ) %>%
   tidy_tests()
 
-distribution_tests_pooled
+print(distribution_tests_pooled, n = Inf)
 
-write_csv(distribution_tests_pooled, "output/tests/distribution_tests_pooled.csv")
+write_csv(distribution_tests_pooled, "results/numbers_in_paper/distribution_tests_pooled.csv")
+
+# ----- Numbers cited in the text -----
+
+# P-values of each test (e.g. DistTestPooledMistakeRateOneVsThreePval)
+
+write_tex_macros(p_value_macros(distribution_tests_pooled$test, distribution_tests_pooled$p.value, "DistTestPooled"),
+                 "output/numbers/distribution_numbers.tex")

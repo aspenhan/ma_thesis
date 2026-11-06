@@ -1,7 +1,8 @@
 # Appendix A1: regression estimates of treatment effects on effort for the lab and class samples
 # (counterparts of code/regression_test.R for the pooled sample), with tests of equality of treatment coefficients
 # Outputs: output/tables/reg_*_lab.tex, output/tables/reg_*_class.tex,
-#          output/tests/coefficient_tests_lab.csv, output/tests/coefficient_tests_class.csv
+#          output/numbers/regression_numbers_appendix.tex (p-values cited in the text),
+#          results/numbers_in_paper/coefficient_tests_lab.csv, results/numbers_in_paper/coefficient_tests_class.csv
 
 # ----- Setup -----
 
@@ -103,9 +104,9 @@ coefficient_tests_lab <- tibble(
               lh_p_value(reg_sets_lab_baselines, "treatment2 = treatment3"),
               lh_p_value(reg_sets_lab_full, "treatment2 = treatment3")))
 
-coefficient_tests_lab
+print(coefficient_tests_lab)
 
-write_csv(coefficient_tests_lab, "output/tests/coefficient_tests_lab.csv")
+write_csv(coefficient_tests_lab, "results/numbers_in_paper/coefficient_tests_lab.csv")
 
 # ----- Class sample -----
 
@@ -197,6 +198,16 @@ coefficient_tests_class <- tibble(
               lh_p_value(reg_sets_class_baselines, "treatment2 = treatment3"),
               lh_p_value(reg_sets_class_full, "treatment2 = treatment3")))
 
-coefficient_tests_class
+print(coefficient_tests_class)
 
-write_csv(coefficient_tests_class, "output/tests/coefficient_tests_class.csv")
+write_csv(coefficient_tests_class, "results/numbers_in_paper/coefficient_tests_class.csv")
+
+# ----- Numbers cited in the text -----
+
+# Treatment 2 vs 3 coefficient tests (e.g. CoefTestLabAccuracyTargetModelThreePval)
+
+write_tex_macros(c(p_value_macros(str_c(coefficient_tests_lab$outcome, " ", coefficient_tests_lab$model),
+                                  coefficient_tests_lab$p.value, "CoefTestLab"),
+                   p_value_macros(str_c(coefficient_tests_class$outcome, " ", coefficient_tests_class$model),
+                                  coefficient_tests_class$p.value, "CoefTestClass")),
+                 "output/numbers/regression_numbers_appendix.tex")
