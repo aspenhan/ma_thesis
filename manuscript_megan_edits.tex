@@ -39,6 +39,7 @@
 \usepackage{graphicx}
 \usepackage{float}                      % [H] placement
 \usepackage{caption}
+\captionsetup{position=top}            % captions go above tables, figures and subfigures
 \usepackage{subcaption}                 % subfigure environment
 \usepackage{booktabs}                   % \toprule, \midrule, \bottomrule
 \usepackage{array}                      % >{...} column formats
@@ -110,9 +111,6 @@
 %---------------------------------------------------------------------------------------------------
 % Helpers
 %---------------------------------------------------------------------------------------------------
-
-% Shrink a generated table: typeset it #1 times as wide as the text, then scale it down to the text width
-\newcommand{\inputscaled}[2]{\resizebox{\linewidth}{!}{\begin{minipage}{#1\linewidth}\input{#2}\end{minipage}}}
 
 % Visible placeholder for text still to be written
 \newcommand{\todo}[1]{\textcolor{red}{[#1]}}
@@ -205,8 +203,8 @@ Each page of the task showed a set of three sliders, each to be moved to a desig
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.75\linewidth]{survey_screenshots/slider_task_set_example.png}
 \caption{Example of a set in the slider task}\label{fig:slider-set-example}
+\includegraphics[width=0.75\linewidth]{survey_screenshots/slider_task_set_example.png}
 \end{figure}
 
 The task is tedious, so effort is costly, and simple, so performance depends more on effort than on skill or education. Its abstractness is deliberate: the aim is to identify how people respond to multiple targets in general rather than in a particular job. Five minutes at low stakes is far from a real job, but it captures how a worker responds to targets within a single task, such as one delivery or one ride.
@@ -221,6 +219,7 @@ The task is tedious, so effort is costly, and simple, so performance depends mor
 
 \begin{table}[htbp]
 \centering
+\caption{The action plan shown to the \LP{} and \SP{} groups. The bold row corresponds to just meeting both targets.}\label{tab:action-plan}
 \begin{tabular}{@{}ccc@{}}
 \toprule
  & \multicolumn{2}{c}{Maximum actual mistakes} \\
@@ -234,7 +233,6 @@ Sets completed & Strict criterion & Lenient criterion \\
 55 & 5 & 22 \\
 \bottomrule
 \end{tabular}
-\caption{The action plan shown to the \LP{} and \SP{} groups. The bold row corresponds to just meeting both targets.}\label{tab:action-plan}
 \end{table}
 
 \subsection{Treatment groups}
@@ -243,6 +241,7 @@ Table~\ref{tab:treatment-groups} summarises the four groups. ``Lenient'' and ``S
 
 \begin{table}[htbp]
 \centering
+\caption{Treatment groups. \TreatmentKey}\label{tab:treatment-groups}
 \begin{tabularx}{\linewidth}{@{}ll>{\raggedright\arraybackslash}Xl@{}}
 \toprule
 Group & Targets & Assessment criterion & Action plan \\
@@ -253,7 +252,6 @@ Group & Targets & Assessment criterion & Action plan \\
 \LNName{} & Yes & 75\% lenient, 25\% strict & No \\
 \bottomrule
 \end{tabularx}
-\caption{Treatment groups. \TreatmentKey}\label{tab:treatment-groups}
 \end{table}
 
 \subsection{Payment}
@@ -314,6 +312,7 @@ The models disagree about the treated groups. In the standard model, a higher ch
 
 \begin{table}[htbp]
 \centering
+\caption{Predictions of the two models}\label{tab:predictions}
 \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
 \toprule
 Comparison & Standard KR model & Extended model \\
@@ -325,7 +324,6 @@ Comparison & Standard KR model & Extended model \\
 \LNName{} vs \newline \LPName{} \newline (secondary test) & No difference & Weaker response in both dimensions (closer to \CtrlName{}) \\
 \bottomrule
 \end{tabularx}
-\caption{Predictions of the two models}\label{tab:predictions}
 \end{table}
 
 \noindent The results section tests these predictions in order:
@@ -346,8 +344,8 @@ Randomisation produced balanced groups. A joint likelihood ratio test does not r
 
 \begin{table}[htbp]
 \centering
-{\input{output/tables/covariates_sumstats_pooled.tex}\par}
 \caption{Covariates by treatment group (pooled sample). \TreatmentKey}\label{tab:covariates-sumstats-pooled}
+{\input{output/tables/covariates_sumstats_pooled.tex}\par}
 \end{table}
 
 \subsection{Performance by sample}
@@ -363,17 +361,17 @@ Figure~\ref{fig:effort-tradeoffs-2} drops observations outside Tukey's fences (m
 
 \begin{figure}[htbp]
 \centering
-\begin{subfigure}{\linewidth}
-\centering
-\includegraphics[width=0.75\linewidth]{output/figures/effort_tradeoffs_all.pdf}
-\caption{All participants}\label{fig:effort-tradeoffs-1}
-\end{subfigure}
-\begin{subfigure}{\linewidth}
-\centering
-\includegraphics[width=0.75\linewidth]{output/figures/effort_tradeoffs_no_outliers.pdf}
-\caption{Excluding participants outside Tukey's fences on either measure (62 of \NumObs{})}\label{fig:effort-tradeoffs-2}
-\end{subfigure}
 \caption{Speed and accuracy in the slider task. Point size shows the number of participants; the line is a loess fit with its 95\% confidence band.}\label{fig:effort-tradeoffs}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{All participants}\label{fig:effort-tradeoffs-1}
+\includegraphics[width=0.75\linewidth]{output/figures/effort_tradeoffs_all.pdf}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Excluding participants outside Tukey's fences on either measure (62 of \NumObs{})}\label{fig:effort-tradeoffs-2}
+\includegraphics[width=0.75\linewidth]{output/figures/effort_tradeoffs_no_outliers.pdf}
+\end{subfigure}
 \end{figure}
 
 \section{Results}
@@ -389,7 +387,7 @@ where $A_i$ indicates a recorded mistake rate of at most 10\%, $T_{ji}$ indicate
 mistakerate_i &= \gamma_1 + \gamma_2 T_{2i} + \gamma_3 T_{3i} + \gamma_4 T_{4i} + \phi\, strict_i + \psi' X_i + \varepsilon_i \tag{2} \\
 setscompleted_i &= \delta_1 + \delta_2 T_{2i} + \delta_3 T_{3i} + \delta_4 T_{4i} + \mu\, strict_i + \nu' X_i + \varepsilon_i \tag{3}
 \end{align*}
-Each regression is estimated four ways: with no controls, adding covariates, adding baseline performance, and adding both. In the regression tables in the main text, the rows labelled ``Baselines'' and ``Covariates'' show which controls each column includes. The specifications with covariates use the 549 participants who answered all covariate questions. I focus on the two specifications that control for baseline performance, with and without covariates. Baseline performance is measured before treatment and is by far the most informative control: it raises the adjusted $R^2$ of the sets-completed regression from 0.01 to 0.45 (Table~\ref{tab:reg-sets}).\footnote{Standard errors for the mistake-rate regression with both baseline performance and covariates could not be computed, because the outcome is concentrated at zero relative to the number of regressors.}
+Each regression is estimated four ways: with no controls, adding covariates, adding baseline performance, and adding both. In the regression tables in the main text, the rows labelled ``Baselines'' and ``Covariates'' show which controls each column includes. The specifications with covariates use the 549 participants who answered all covariate questions. I focus on the two specifications that control for baseline performance, with and without covariates. Baseline performance is measured before treatment and is by far the most informative control: it raises the adjusted $R^2$ of the sets-completed regression from \AdjRsqSetsNoControls{} to \AdjRsqSetsBaselines{}.\footnote{Standard errors for the mistake-rate regression with both baseline performance and covariates could not be computed, because the outcome is concentrated at zero relative to the number of regressors.}
 
 H1 and H2 are stated in terms of magnitudes: the extended model predicts $|\beta_3| < |\beta_2|$ and $|\beta_4| < |\beta_2|$, and likewise for $\gamma$ and $\delta$. Magnitudes rather than signs are what matter because the direction of the response depends on where participants start relative to each target, which differs between dimensions. I treat H1 and H2 as separate questions rather than one family of hypotheses, since each stands on its own given H0, and so do not adjust their p-values jointly.
 
@@ -411,50 +409,41 @@ These self-reports were collected after the task, from the participants who chos
 
 \begin{table}[htbp]
 \centering
-\inputscaled{1.25}{output/tables/performance_sumstats_pooled.tex}
-
-\medskip
-\inputscaled{1.25}{output/tables/performance_sumstats_lab.tex}
-
-\medskip
-\inputscaled{1.25}{output/tables/performance_sumstats_micro.tex}
-
-\medskip
-\inputscaled{1.25}{output/tables/performance_sumstats_macro.tex}
 \caption{Slider task performance by sample and treatment group. \TreatmentKey}\label{tab:slider-performance-sumstats}
+\input{output/tables/performance_sumstats.tex}
 \end{table}
 
 \begin{figure}[htbp]
 \centering
-\begin{subfigure}{\linewidth}
-\centering
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_pooled.pdf}
-\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-1}
-\end{subfigure}
-\begin{subfigure}{\linewidth}
-\centering
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_pooled.pdf}
-\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-2}
-\end{subfigure}
 \caption{Cumulative distributions of slider task performance by treatment group (pooled sample). \TreatmentKey}\label{fig:slider-performance-distribution-comparison}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-1}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_pooled.pdf}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-2}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_pooled.pdf}
+\end{subfigure}
 \end{figure}
 
 \begin{table}[htbp]
 \centering
-\input{output/tables/reg_target.tex}
 \caption{Treatment effects on the probability of meeting the accuracy target (pooled sample, logit). \TreatmentKey}\label{tab:reg-target}
+\input{output/tables/reg_target.tex}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\input{output/tables/reg_mistakes.tex}
 \caption{Treatment effects on the mistake rate (pooled sample). \TreatmentKey}\label{tab:reg-mistakes}
+\input{output/tables/reg_mistakes.tex}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\input{output/tables/reg_sets.tex}
 \caption{Treatment effects on sets completed (pooled sample). \TreatmentKey}\label{tab:reg-sets}
+\input{output/tables/reg_sets.tex}
 \end{table}
 
 \subsection{Are the responses driven by loss aversion?}
@@ -482,20 +471,20 @@ The results do not support the reference-point interpretation (Tables~\ref{tab:r
 
 \begin{table}[htbp]
 \centering
-\input{output/tables/reg_target_la.tex}
 \caption{Treatment effects on the probability of meeting the accuracy target, interacted with loss aversion. \TreatmentKey}\label{tab:reg-target-la}
+\input{output/tables/reg_target_la.tex}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\input{output/tables/reg_mistakes_la.tex}
 \caption{Treatment effects on the mistake rate, interacted with loss aversion. \TreatmentKey}\label{tab:reg-mistakes-la}
+\input{output/tables/reg_mistakes_la.tex}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\input{output/tables/reg_sets_la.tex}
 \caption{Treatment effects on sets completed, interacted with loss aversion. \TreatmentKey}\label{tab:reg-sets-la}
+\input{output/tables/reg_sets_la.tex}
 \end{table}
 
 \subsection{Main test: does a lower chance of meeting both targets weaken the response?}
@@ -543,113 +532,113 @@ In all tables and figures, \TreatmentKey
 
 \begin{table}[p]
 \centering
-{\input{output/tables/covariates_sumstats_lab.tex}\par}
 \caption{Covariates by treatment group (lab sample)}\label{tab:covariates-sumstats-lab}
+{\input{output/tables/covariates_sumstats_lab.tex}\par}
 \end{table}
 
 \begin{table}[p]
 \centering
-{\input{output/tables/covariates_sumstats_micro.tex}\par}
 \caption{Covariates by treatment group (microeconomics class sample)}\label{tab:covariates-sumstats-micro}
+{\input{output/tables/covariates_sumstats_micro.tex}\par}
 \end{table}
 
 \begin{table}[p]
 \centering
-{\input{output/tables/covariates_sumstats_macro.tex}\par}
 \caption{Covariates by treatment group (macroeconomics class sample)}\label{tab:covariates-sumstats-macro}
+{\input{output/tables/covariates_sumstats_macro.tex}\par}
 \end{table}
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}{\linewidth}
-\centering
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_lab.pdf}
-\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-lab-1}
-\end{subfigure}
-\begin{subfigure}{\linewidth}
-\centering
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_lab.pdf}
-\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-lab-2}
-\end{subfigure}
 \caption{Distributions of key performance metrics in the slider task across treatments (lab sample)}\label{fig:slider-performance-distribution-comparison-lab}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-lab-1}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_lab.pdf}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-lab-2}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_lab.pdf}
+\end{subfigure}
 \end{figure}
 
 \begin{figure}[htbp]
 \centering
-\begin{subfigure}{\linewidth}
-\centering
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_class.pdf}
-\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-class-1}
-\end{subfigure}
-\begin{subfigure}{\linewidth}
-\centering
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_class.pdf}
-\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-class-2}
-\end{subfigure}
 \caption{Distributions of key performance metrics in the slider task across treatments (class sample)}\label{fig:slider-performance-distribution-comparison-class}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-class-1}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_class.pdf}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-class-2}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_class.pdf}
+\end{subfigure}
 \end{figure}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on accuracy target achievement likelihood (pooled sample)}\label{tab:reg-target-full}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_target_full.tex}\par}
-\caption{Treatment effects on accuracy target achievement likelihood (pooled sample)}\label{tab:reg-target-full}
 \end{table}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on mistakes rate (pooled sample)}\label{tab:reg-mistakes-full}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_mistakes_full.tex}\par}
-\caption{Treatment effects on mistakes rate (pooled sample)}\label{tab:reg-mistakes-full}
 \end{table}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on sets completed (pooled sample)}\label{tab:reg-sets-full}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_sets_full.tex}\par}
-\caption{Treatment effects on sets completed (pooled sample)}\label{tab:reg-sets-full}
 \end{table}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on accuracy target achievement likelihood (lab sample)}\label{tab:reg-target-lab}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_target_lab.tex}\par}
-\caption{Treatment effects on accuracy target achievement likelihood (lab sample)}\label{tab:reg-target-lab}
 \end{table}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on mistake rate (lab sample)}\label{tab:reg-mistakes-lab}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_mistakes_lab.tex}\par}
-\caption{Treatment effects on mistake rate (lab sample)}\label{tab:reg-mistakes-lab}
 \end{table}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on sets completed (lab sample)}\label{tab:reg-sets-lab}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_sets_lab.tex}\par}
-\caption{Treatment effects on sets completed (lab sample)}\label{tab:reg-sets-lab}
 \end{table}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on accuracy target achievement likelihood (class sample)}\label{tab:reg-target-class}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_target_class.tex}\par}
-\caption{Treatment effects on accuracy target achievement likelihood (class sample)}\label{tab:reg-target-class}
 \end{table}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on mistake rates (class sample)}\label{tab:reg-mistakes-class}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_mistakes_class.tex}\par}
-\caption{Treatment effects on mistake rates (class sample)}\label{tab:reg-mistakes-class}
 \end{table}
 
 \begin{table}[p]
 \centering
+\caption{Treatment effects on sets completed (class sample)}\label{tab:reg-sets-class}
 {\scriptsize\renewcommand{\arraystretch}{0.85}
 \input{output/tables/reg_sets_class.tex}\par}
-\caption{Treatment effects on sets completed (class sample)}\label{tab:reg-sets-class}
 \end{table}
 
 \section{Derivation of first-order conditions for theoretical specification}\label{app:derivation}
@@ -710,6 +699,7 @@ Treatments are numbered as in Table~\ref{tab:treatment-groups}. Since costs do n
 
 \begin{table}[htbp]
 \centering
+\caption{Predicted effort variances}\label{tab:predicted-variance}
 \begin{tabular}{@{}llll@{}}
 \toprule
 Treatment & KR prediction & Appended prediction & Compromise \\
@@ -720,81 +710,80 @@ Treatment & KR prediction & Appended prediction & Compromise \\
 4 & 0.8 & (0.8, 1) & 0.9 \\
 \bottomrule
 \end{tabular}
-\caption{Predicted effort variances}\label{tab:predicted-variance}
 \end{table}
 
 \section{Survey screenshots}\label{app:survey}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/common_instructions.png}
 \caption{Common instructions for all subjects}\label{fig:common-instructions}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/common_instructions.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/treatment1_instructions.png}
 \caption{\Ctrl{} (Treatment 1) instructions}\label{fig:treatment1-instructions}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/treatment1_instructions.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/treatment2_instructions.png}
 \caption{\LP{} (Treatment 2) instructions}\label{fig:treatment2-instructions}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/treatment2_instructions.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/treatment3_instructions.png}
 \caption{\SP{} (Treatment 3) instructions}\label{fig:treatment3-instructions}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/treatment3_instructions.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/treatment4_instructions.png}
 \caption{\LN{} (Treatment 4) instructions}\label{fig:treatment4-instructions}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/treatment4_instructions.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/comprehension_check.png}
 \caption{Comprehension check: last question only for \LP{} and \SP{}}\label{fig:compre-check}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/comprehension_check.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/task_reflection_1.png}
 \caption{Task reflection page 1}\label{fig:task-reflection-1}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/task_reflection_1.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/task_reflection_2.png}
 \caption{Task reflection page 2}\label{fig:task-reflection-2}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/task_reflection_2.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/demographic_survey_1.png}
 \caption{Demographic survey page 1}\label{fig:demographic-survey-1}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/demographic_survey_1.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/demographic_survey_2.png}
 \caption{Demographic survey page 2}\label{fig:demographic-survey-2}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/demographic_survey_2.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/loss_aversion_survey_1.png}
 \caption{Loss aversion survey page 1: pages and payment structures presented in random order}\label{fig:loss-aversion-survey-1}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/loss_aversion_survey_1.png}
 \end{figure}
 
 \begin{figure}[p]
 \centering
-\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/loss_aversion_survey_2.png}
 \caption{Loss aversion survey page 2: pages and payment structures presented in random order}\label{fig:loss-aversion-survey-2}
+\includegraphics[width=\linewidth,height=0.9\textheight,keepaspectratio]{survey_screenshots/loss_aversion_survey_2.png}
 \end{figure}
 
 \end{document}
