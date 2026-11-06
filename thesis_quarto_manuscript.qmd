@@ -91,7 +91,7 @@ def_theme <- theme(plot.title = element_text(family = "serif", size = 13, hjust 
 
 # Source R script used to clean raw data
 
-source("data/raw_data_processing.R")
+source("code/raw_data_processing.R")
 
 ```
 
@@ -1260,7 +1260,19 @@ Nevertheless, in accordance with the original analysis plan and hypothesis, this
 #| label: loss-aversion-estimation
 #| include: false
 
-source("data/loss_aversion_estimation.R")
+# Source R script used to estimate loss aversion in its own environment, since it reloads the cleaned data from disk and would overwrite the changes made to slider_data above (edu relevel, accuracy_target)
+
+loss_aversion_env <- new.env()
+
+source("code/loss_aversion_estimation.R", local = loss_aversion_env)
+
+# Merge the loss aversion estimates into slider_data (rows are in the same order as the cleaned data)
+
+slider_data <- slider_data %>%
+  mutate(id = row_number()) %>%
+  left_join(loss_aversion_env$slider_data %>% select(id, J_i:lambda_i_adj), by = "id")
+
+rm(loss_aversion_env)
 
 ```
 

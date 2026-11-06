@@ -1,4 +1,5 @@
 % Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
@@ -8,24 +9,24 @@
   letterpaper,
   DIV=11,
   numbers=noendperiod]{scrartcl}
-
+\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
-\usepackage{setspace}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usepackage{lmodern}
-\ifPDFTeX\else  
-    % xetex/luatex font selection
-    \setmainfont[]{Times New Roman}
-    \setsansfont[]{Garamond}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+  \setmainfont[]{Times New Roman}
+  \setsansfont[]{Garamond}
   \setmathfont[]{Cambria Math}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
@@ -34,6 +35,7 @@
   \usepackage[]{microtype}
   \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
+\usepackage{setspace}
 \makeatletter
 \@ifundefined{KOMAClassName}{% if non-KOMA class
   \IfFileExists{parskip.sty}{%
@@ -44,9 +46,6 @@
 }{% if KOMA class
   \KOMAoptions{parskip=half}}
 \makeatother
-\usepackage{xcolor}
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 % Make \paragraph and \subparagraph free-standing
 \makeatletter
 \ifx\paragraph\undefined\else
@@ -72,8 +71,8 @@
 \makeatother
 
 
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
 \usepackage{calc} % for calculating minipage widths
 % Correct order of tables after \paragraph or \subparagraph
 \usepackage{etoolbox}
@@ -98,6 +97,8 @@
 % Set default figure placement to htbp
 \def\fps@figure{htbp}
 \makeatother
+
+
 % definitions for citeproc citations
 \NewDocumentCommand\citeproctext{}{}
 \NewDocumentCommand\citeproc{mm}{%
@@ -131,6 +132,18 @@
 \newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
 \newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
 
 \usepackage{booktabs}
 \usepackage{caption}
@@ -192,11 +205,13 @@
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
 \makeatother
-
 \usepackage{bookmark}
-
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
+% fallback for those not using the hyperref driver hyperxmp:
+\makeatletter
+\@ifundefined{xmpquote}{\newcommand{\xmpquote}[1]{#1}}{}
+\makeatother
 \hypersetup{
   pdftitle={Too hard to get: the role of probabilistic expectations and cognitive complexity in multi-dimensional reference dependence},
   pdfauthor={Aspen Han},
@@ -212,7 +227,6 @@
 cognitive complexity in multi-dimensional reference dependence}
 \author{Aspen Han}
 \date{}
-
 \begin{document}
 \maketitle
 
@@ -309,14 +323,14 @@ operations and general management literature (e.g. Hayes 1984; Hayes and
 Schmenner 1978; Skinner 1974, 1996; Swamidass and Darlow 2000). Further
 insights can be gleaned from examining this concept within economics.
 Targets can and have been integrated into the framework of
-expectations-based reference points (Heath, Larrick, and Wu 1999; Von
-Rechenberg, Gutt, and Kundisch 2016), a growing body of research within
-behavioral economics. However, empirical studies have mainly examined
-the effects of reference points uni-dimensionally, though theoretical
-models encompassing multi-dimensional reference points exist. Thus, I
-seek to investigate the mechanisms through which reference points
-interact across dimensions within this economic framework, specifically
-answering the following research questions:
+expectations-based reference points (Heath et al. 1999; Von Rechenberg
+et al. 2016), a growing body of research within behavioral economics.
+However, empirical studies have mainly examined the effects of reference
+points uni-dimensionally, though theoretical models encompassing
+multi-dimensional reference points exist. Thus, I seek to investigate
+the mechanisms through which reference points interact across dimensions
+within this economic framework, specifically answering the following
+research questions:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -345,25 +359,24 @@ reference points to be the agent's (rational) expectations, specifically
 his/her probabilistic beliefs held in the recent past about what will or
 should happen. This accommodated alternative arguments about the origins
 of reference points, which had been contended to be the status quo by
-some (e.g. Genesove and Mayer 2001; Kahneman, Knetsch, and Thaler 1990)
-but also refuted by other (e.g. Plott and Zeiler 2005; Tversky and
-Kahneman 1991). Pinpointing the source of reference points allowed for
-more detailed studies into their manipulability from a policy
-perspective, which motivates my use of the KR model as a theoretical
-baseline. The model also generalizes to multiple dimensions of
-consumption, increasing portability to the conventional consumer choice
-problems in economics. While there remains a continued debate about the
-source of reference points, this paper abstracts away from that and
-instead focuses on whether the KR model is a good description of
-behavior with respect to reference points across multiple dimensions
-within the framework of expectations-based reference point. Similar to
-other expected utility and reference-dependent models, the KR model
-assumes that utilities across different dimensions of consumption are
-additively separate, which I seek to challenge. Given the motivating
-example highlighted above, it seems unrealistic to think that people
-would view reference points in each dimension in isolation from one
-another and determine how much to work towards each with complete
-disregard for the others.
+some (e.g. Genesove and Mayer 2001; Kahneman et al. 1990) but also
+refuted by other (e.g. Plott and Zeiler 2005; Tversky and Kahneman
+1991). Pinpointing the source of reference points allowed for more
+detailed studies into their manipulability from a policy perspective,
+which motivates my use of the KR model as a theoretical baseline. The
+model also generalizes to multiple dimensions of consumption, increasing
+portability to the conventional consumer choice problems in economics.
+While there remains a continued debate about the source of reference
+points, this paper abstracts away from that and instead focuses on
+whether the KR model is a good description of behavior with respect to
+reference points across multiple dimensions within the framework of
+expectations-based reference point. Similar to other expected utility
+and reference-dependent models, the KR model assumes that utilities
+across different dimensions of consumption are additively separate,
+which I seek to challenge. Given the motivating example highlighted
+above, it seems unrealistic to think that people would view reference
+points in each dimension in isolation from one another and determine how
+much to work towards each with complete disregard for the others.
 
 The interaction effects between reference points across dimensions had
 been largely neglected despite a rich empirical literature in the
@@ -709,10 +722,9 @@ fairness concerns as awarding additional class credit based on task
 performance would depend on the assessment criteria which was assigned
 by chance, nor in the lab sample due to budgetary constraints (otherwise
 it would have further shrunk the sample size). Again, this may cause
-selection issues; Harrison, Lau, and Elisabet Rutström (2009) evinced
-that a fixed payment for participation can attract more risk-averse
-people, so this will be important to keep in mind when evaluating
-treatment effects.
+selection issues; Harrison et al. (2009) evinced that a fixed payment
+for participation can attract more risk-averse people, so this will be
+important to keep in mind when evaluating treatment effects.
 
 Participants completed the experiment virtually on Qualtrics. Conducting
 the experiment in-person would have afforded greater control over the
@@ -880,12 +892,12 @@ between the three sources.
 
 \centering{
 
-\fontsize{9.0pt}{10.8pt}\selectfont
+\fontsize{9.0pt}{11.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{\dimexpr 131.25pt -2\tabcolsep-1.5\arrayrulewidth}ccccc>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}}
 \toprule
  &  & \multicolumn{4}{c}{\textbf{Treatments}} &  &  \\ 
 \cmidrule(lr){3-6}
-\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{4,3}} \\ 
+\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{3,4}} \\ 
 \midrule\addlinespace[2.5pt]
 {\bfseries Gender} &  &  &  &  &  & >0.9 & >0.9 \\ 
     Male & 63 (30\%) & 17 (29\%) & 14 (29\%) & 16 (31\%) & 16 (32\%) &  &  \\ 
@@ -941,12 +953,12 @@ sample}
 
 \centering{
 
-\fontsize{9.0pt}{10.8pt}\selectfont
+\fontsize{9.0pt}{11.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{\dimexpr 131.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}}
 \toprule
  &  & \multicolumn{4}{c}{\textbf{Treatments}} &  &  \\ 
 \cmidrule(lr){3-6}
-\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{4,3}} \\ 
+\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{3,4}} \\ 
 \midrule\addlinespace[2.5pt]
 {\bfseries Gender} &  &  &  &  &  & 0.2 & 0.2 \\ 
     Male & 139 (62\%) & 40 (66\%) & 28 (54\%) & 39 (72\%) & 32 (54\%) &  &  \\ 
@@ -988,12 +1000,12 @@ microeconomic class sample}
 
 \centering{
 
-\fontsize{9.0pt}{10.8pt}\selectfont
+\fontsize{9.0pt}{11.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{\dimexpr 131.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 56.25pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}}
 \toprule
  &  & \multicolumn{4}{c}{\textbf{Treatments}} &  &  \\ 
 \cmidrule(lr){3-6}
-\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{4,3}} \\ 
+\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{3,4}} \\ 
 \midrule\addlinespace[2.5pt]
 {\bfseries Gender} &  &  &  &  &  & 0.6 & 0.6 \\ 
     Male & 97 (52\%) & 22 (44\%) & 22 (49\%) & 24 (60\%) & 29 (56\%) &  &  \\ 
@@ -1035,12 +1047,12 @@ macroeconomic class sample}
 
 \centering{
 
-\fontsize{9.0pt}{10.8pt}\selectfont
+\fontsize{9.0pt}{11.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{\dimexpr 131.25pt -2\tabcolsep-1.5\arrayrulewidth}ccccc>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}}
 \toprule
  &  & \multicolumn{4}{c}{\textbf{Treatments}} &  &  \\ 
 \cmidrule(lr){3-6}
-\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{4,3}} \\ 
+\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{3,4}} \\ 
 \midrule\addlinespace[2.5pt]
 {\bfseries Gender} &  &  &  &  &  & 0.7 & 0.7 \\ 
     Male & 299 (48\%) & 79 (47\%) & 64 (44\%) & 79 (54\%) & 77 (48\%) &  &  \\ 
@@ -1153,7 +1165,7 @@ improve precision and mitigate potential confounds.
 
 \centering{
 
-\fontsize{12.0pt}{14.4pt}\selectfont
+\fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccccc}
 \toprule
  & \multicolumn{5}{c}{\textbf{RFCDR Lab}} \\ 
@@ -1169,7 +1181,7 @@ Mistake rate (\%) & 7 (15) & 8 (17) & 7 (13) & 7 (14) & 7 (16) \\
 \textsuperscript{\textit{1}}Mean (SD)\\
 \end{minipage}
 
-\fontsize{12.0pt}{14.4pt}\selectfont
+\fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccccc}
 \toprule
  & \multicolumn{5}{c}{\textbf{Microeconomics Class}} \\ 
@@ -1185,7 +1197,7 @@ Mistake rate (\%) & 7 (15) & 10 (22) & 6 (12) & 7 (7) & 6 (14) \\
 \textsuperscript{\textit{1}}Mean (SD)\\
 \end{minipage}
 
-\fontsize{12.0pt}{14.4pt}\selectfont
+\fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccccc}
 \toprule
  & \multicolumn{5}{c}{\textbf{Macroeconomics Class}} \\ 
@@ -1201,7 +1213,7 @@ Mistake rate (\%) & 7 (17) & 5 (12) & 6 (16) & 12 (25) & 6 (13) \\
 \textsuperscript{\textit{1}}Mean (SD)\\
 \end{minipage}
 
-\fontsize{12.0pt}{14.4pt}\selectfont
+\fontsize{12.0pt}{14.0pt}\selectfont
 \begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}lccccc}
 \toprule
  & \multicolumn{5}{c}{\textbf{Pooled}} \\ 
@@ -1306,7 +1318,7 @@ is quite weak\footnote{In fact, the scatterplot can be refitted as
 
 \centering{
 
-\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_manuscript_files/figure_pdf/fig_effort_tradeoffs_1.pdf}
+\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_quarto_manuscript_files/figure-pdf/fig-effort-tradeoffs-1.pdf}
 
 }
 
@@ -1314,7 +1326,7 @@ is quite weak\footnote{In fact, the scatterplot can be refitted as
 
 \centering{
 
-\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_manuscript_files/figure_pdf/fig_effort_tradeoffs_2.pdf}
+\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_quarto_manuscript_files/figure-pdf/fig-effort-tradeoffs-2.pdf}
 
 }
 
@@ -1453,7 +1465,7 @@ subsamples.
 
 \centering{
 
-\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_manuscript_files/figure_pdf/fig_slider_performance_distribution_comparison_1.pdf}
+\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_quarto_manuscript_files/figure-pdf/fig-slider-performance-distribution-comparison-1.pdf}
 
 }
 
@@ -1462,7 +1474,7 @@ completed}
 
 \centering{
 
-\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_manuscript_files/figure_pdf/fig_slider_performance_distribution_comparison_2.pdf}
+\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_quarto_manuscript_files/figure-pdf/fig-slider-performance-distribution-comparison-2.pdf}
 
 }
 
@@ -1952,8 +1964,8 @@ which signals a potential new avenue for research.
 
 \section{Bibliography}\label{bibliography}
 
-\phantomsection\label{refs}
-\begin{CSLReferences}{1}{0}
+\protect\phantomsection\label{refs}
+\begin{CSLReferences}{1}{1}
 \bibitem[\citeproctext]{ref-abeler.2011.referencepoints}
 Abeler, Johannes, Armin Falk, Lorenz Goette, and David Huffman. 2011.
 {``Reference {Points} and {Effort Provision}.''} \emph{American Economic
@@ -1976,7 +1988,7 @@ Bell, David E. 1982. {``Regret in {Decision Making} Under
 \url{https://doi.org/10.1287/opre.30.5.961}.
 
 \bibitem[\citeproctext]{ref-bell.1985.disappointmentdecision}
----------. 1985. {``Disappointment in {Decision Making Under
+Bell, David E. 1985. {``Disappointment in {Decision Making Under
 Uncertainty}.''} \emph{Operations Research} 33 (1): 1--27.
 \url{https://doi.org/10.1287/opre.33.1.1}.
 
@@ -2012,8 +2024,8 @@ Experiments.''} \emph{Journal of Economic Behavior \& Organization} 70
 
 \bibitem[\citeproctext]{ref-hayes.1984.restoringour}
 Hayes, Robert H. 1984. \emph{Restoring Our Competitive Edge :
-{Competing} Through Manufacturing}. Edited by Steven C. Wheelwright. New
-York: Wiley.
+{Competing} Through Manufacturing}. Edited by Steven C. Wheelwright.
+Wiley.
 
 \bibitem[\citeproctext]{ref-hayes.1978.howshould}
 Hayes, Robert H, and Roger W Schmenner. 1978. {``How Should You Organize
@@ -2047,9 +2059,10 @@ Alternative Theory} of {Rational Choice Under Uncertainty}.''} \emph{The
 Economic Journal} 92 (368): 805. \url{https://doi.org/10.2307/2232669}.
 
 \bibitem[\citeproctext]{ref-loomes.1986.disappointmentdynamic}
----------. 1986. {``Disappointment and {Dynamic Consistency} in {Choice}
-Under {Uncertainty}.''} \emph{The Review of Economic Studies} 53 (2):
-271--82. \url{https://doi.org/10.2307/2297651}.
+Loomes, Graham, and Robert Sugden. 1986. {``Disappointment and {Dynamic
+Consistency} in {Choice} Under {Uncertainty}.''} \emph{The Review of
+Economic Studies} 53 (2): 271--82.
+\url{https://doi.org/10.2307/2297651}.
 
 \bibitem[\citeproctext]{ref-plott.2005.willingnesspay}
 Plott, Charles R, and Kathryn Zeiler. 2005. {``The {Willingness} to
@@ -2063,14 +2076,14 @@ Skinner, Wickham. 1974. {``The Focused Factory.''} \emph{Harvard
 Business Review} 52: 113--21.
 
 \bibitem[\citeproctext]{ref-skinner.1996.manufacturingstrategy}
----------. 1996. {``{MANUFACTURING STRATEGY ON THE} {`{S}'} {CURVE}.''}
-\emph{Production and Operations Management} 5 (1): 3--14.
+Skinner, Wickham. 1996. {``{MANUFACTURING STRATEGY ON THE} {`{S}'}
+{CURVE}.''} \emph{Production and Operations Management} 5 (1): 3--14.
 \url{https://doi.org/10.1111/j.1937-5956.1996.tb00381.x}.
 
 \bibitem[\citeproctext]{ref-swamidass.2000.focusedfactory}
 Swamidass, Paul M., and Neil R. Darlow. 2000. {``{FOCUSED FACTORY}.''}
 In \emph{Encyclopedia of {Production} and {Manufacturing Management}},
-edited by P. M. Swamidass, 219--24. New York, NY: Springer US.
+edited by P. M. Swamidass. Springer US.
 \url{https://doi.org/10.1007/1-4020-0612-8_355}.
 
 \bibitem[\citeproctext]{ref-tversky.1991.lossaversion}
@@ -2098,7 +2111,7 @@ Reward System}.''} \emph{Decision Analysis} 13 (2): 153--71.
 
 \centering{
 
-\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_manuscript_files/figure_pdf/fig_slider_performance_distribution_comparison_lab_1.pdf}
+\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_quarto_manuscript_files/figure-pdf/fig-slider-performance-distribution-comparison-lab-1.pdf}
 
 }
 
@@ -2107,7 +2120,7 @@ completed}
 
 \centering{
 
-\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_manuscript_files/figure_pdf/fig_slider_performance_distribution_comparison_lab_2.pdf}
+\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_quarto_manuscript_files/figure-pdf/fig-slider-performance-distribution-comparison-lab-2.pdf}
 
 }
 
@@ -2128,7 +2141,7 @@ sample)}
 
 \centering{
 
-\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_manuscript_files/figure_pdf/fig_slider_performance_distribution_comparison_class_1.pdf}
+\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_quarto_manuscript_files/figure-pdf/fig-slider-performance-distribution-comparison-class-1.pdf}
 
 }
 
@@ -2137,7 +2150,7 @@ completed}
 
 \centering{
 
-\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_manuscript_files/figure_pdf/fig_slider_performance_distribution_comparison_class_2.pdf}
+\includegraphics[width=0.75\linewidth,height=\textheight,keepaspectratio]{thesis_quarto_manuscript_files/figure-pdf/fig-slider-performance-distribution-comparison-class-2.pdf}
 
 }
 
