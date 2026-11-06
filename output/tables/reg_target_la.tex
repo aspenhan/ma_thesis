@@ -8,23 +8,23 @@
  & (1) & (2) \\
 \midrule
 Lenient with Plan                        & $-1.09^{*}$   & $-1.25^{*}$   \\
-                                         & $(0.59)$      & $(0.68)$      \\
+                                         & $(0.60)$      & $(0.70)$      \\
 Strict with Plan                         & $-0.33$       & $-0.39$       \\
-                                         & $(0.38)$      & $(0.43)$      \\
+                                         & $(0.39)$      & $(0.46)$      \\
 Lenient without Plan                     & $-0.37$       & $-0.29$       \\
-                                         & $(0.52)$      & $(0.57)$      \\
+                                         & $(0.54)$      & $(0.58)$      \\
 Strict criterion                         & $-2.35^{***}$ & $-2.61^{***}$ \\
-                                         & $(0.52)$      & $(0.59)$      \\
-Loss aversion ($\lambda_i$)              & $-0.11$       & $-0.13$       \\
-                                         & $(0.10)$      & $(0.12)$      \\
-Lenient with Plan $\times$ loss aversion & $0.36$        & $0.42$        \\
-                                         & $(0.28)$      & $(0.30)$      \\
+                                         & $(0.54)$      & $(0.64)$      \\
+Loss aversion                            & $-0.11$       & $-0.13$       \\
+                                         & $(0.12)$      & $(0.15)$      \\
+Lenient with Plan $\times$ Loss aversion & $0.36$        & $0.42$        \\
+                                         & $(0.30)$      & $(0.34)$      \\
 Constant                                 & $3.88^{***}$  & $3.12^{**}$   \\
-                                         & $(0.84)$      & $(1.21)$      \\
+                                         & $(0.82)$      & $(1.28)$      \\
 \midrule
 Baselines                                & Yes           & Yes           \\
 Covariates                               & No            & Yes           \\
-Observations                                & $503$         & $460$         \\
+Observations                                & $503$         & $453$         \\
 \bottomrule
 \end{tabular}
 }%
@@ -32,5 +32,5 @@ Observations                                & $503$         & $460$         \\
 \usebox{\regtablebox}
 
 \smallskip
-{\footnotesize\raggedright\textit{Notes:} Logit estimates, with standard errors in parentheses. The outcome is meeting the accuracy target, that is, a recorded mistake rate of at most 10\%. The omitted group is Control. Loss aversion is the participant's estimated $\lambda_i$, top-coded at 4.33 and bottom-coded at 0. Both specifications control for baseline performance in the demo task (sets attempted, sets completed and mistakes); column (2) also controls for gender, race, household income, education, economics studies, occupation and mouse use. The sample is the participants whose loss aversion could be estimated and, in column (2), who answered all covariate questions. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.1$.\par}
+{\footnotesize\raggedright\textit{Notes:} Logit estimates, with robust (HC3) standard errors in parentheses. The outcome is meeting the accuracy target, that is, a recorded mistake rate of at most 10\%. The omitted group is Control. Loss aversion is the participant's estimated $\lambda_i$, top-coded at 4.33 and bottom-coded at 0. Both specifications control for baseline performance in the demo task (sets attempted, sets completed and mistakes); column (2) also controls for gender, race, household income, education level, economics studies, occupation and mouse use. The sample is the participants whose loss aversion could be estimated and, in column (2), who answered all covariate questions, except the few non-binary participants. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.1$.\par}
 \end{minipage}

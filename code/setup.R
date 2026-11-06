@@ -50,7 +50,7 @@ treatment_names <- c("1" = "Control", "2" = "Lenient with Plan", "3" = "Strict w
 ## ----- Covariates -----
 
 covariate_names <- c(gender = "Gender", race = "Race", age = "Age", income = "Household income",
-                     edu = "Education", econ = "Studied economics", occupation = "Occupation", mouse = "Used mouse")
+                     edu = "Education level", econ = "Studied economics", occupation = "Occupation", mouse = "Used mouse")
 
 # Clearer names for some covariate categories ("--" is an en dash in LaTeX; gt escapes the dollar signs, and
 # latex_dollars() escapes them for texreg tables and notes)
@@ -143,10 +143,20 @@ finish_gt <- function(tbl, note) {
     tab_source_note(str_c("NOTESLABEL ", note))
 }
 
+# Set in bold the first cell of each row that heads a block of indented rows (e.g. "Gender" above its categories)
+
+bold_group_headings <- function(tex) {
+  lines <- str_split(tex, "\n")[[1]]
+  is_indented <- str_detect(lines, "^\\\\quad ")
+  heading <- !is_indented & lead(is_indented, default = FALSE) & str_detect(lines, "&")
+  lines[heading] <- str_replace(lines[heading], "^([^&]*?)\\s*&", "\\\\textbf{\\1} &")
+  str_c(lines, collapse = "\n")
+}
+
 # Save a gt table as LaTeX, dropping gt's table environment since the manuscript supplies the float, caption and label.
-# Also indents category rows with \quad instead of gtsummary's non-breaking spaces, breaks the treatment group headers over two
-# lines, and adds a rule above the observations row. In tables with panels (row groups), the panel headings are set in
-# italics below a single rule instead
+# Also indents category rows with \quad instead of gtsummary's non-breaking spaces, sets the headings of blocks of
+# categories in bold, breaks the treatment group headers over two lines, and adds a rule above the observations row.
+# In tables with panels (row groups), the panel headings are set in bold below a single rule instead
 
 save_gt_tex <- function(gt_table, file) {
   group_heading <- "\\\\midrule\\\\addlinespace\\[2.5pt\\]\n\\\\multicolumn\\{(\\d+)\\}\\{l\\}\\{([^}]*)\\} \\\\\\\\\\[2.5pt\\] \n\\\\midrule\\\\addlinespace\\[2.5pt\\]\n"
@@ -157,6 +167,7 @@ save_gt_tex <- function(gt_table, file) {
     str_remove("\\s*\\\\end\\{table\\}\\s*$") %>%
     str_replace_all(gt_latex_tokens) %>%
     str_replace_all("(?m)^[ \\u00a0]{4}(?=\\S)", "\\\\quad ") %>% #gtsummary indents with non-breaking spaces
+    bold_group_headings() %>%
     str_replace(fixed(">{\\raggedright\\arraybackslash}p{"),
                 fixed(">{\\raggedright\\arraybackslash\\hangindent=2em}p{")) %>% #indent wrapped row labels
     str_replace("\\\\\\\\\n\\\\end\\{minipage\\}", "\n\\\\end{minipage}") #line break after the note
@@ -165,11 +176,34 @@ save_gt_tex <- function(gt_table, file) {
     str_replace_all(map_chr(treatment_headers, ~ str_c("\\\\begin{tabular}[b]{@{}c@{}}", .x, "\\\\end{tabular}")))
   tex <- str_c(header, str_sub(tex, header_end))
   tex <- if (str_detect(tex, group_heading)) {
-    str_replace_all(tex, group_heading, "\\\\midrule\n\\\\multicolumn{\\1}{l}{\\\\textit{\\2}} \\\\\\\\\n")
+    str_replace_all(tex, group_heading, "\\\\midrule\n\\\\multicolumn{\\1}{l}{\\\\textbf{\\2}} \\\\\\\\\n")
   } else {
     str_replace(tex, "\n(Observations &)", "\n\\\\midrule\n\\1")
   }
   write_with_retry(function() write_lines(tex, file))
+}
+
+### ----- Regression covariates and standard errors -----
+
+# Recode covariates for the regressions: non-binary participants are too few to estimate a coefficient for, so their
+# gender is set to missing (which drops them from the specifications with covariates), and the one participant without
+# a high school diploma is merged with the high school graduates into "No college". College degree or above is the
+# omitted education category
+
+prepare_regression_covariates <- function(data) {
+  data %>%
+    mutate(gender = factor(if_else(gender == "Non-binary", NA_character_, as.character(gender)),
+                           levels = setdiff(levels(gender), "Non-binary")),
+           edu = fct_collapse(edu, "No college" = c("Below high school diploma", "High school diploma")),
+           edu = fct_relevel(edu, "College degree or above"))
+}
+
+# Robust standard errors for all regressions: HC3 (lm_robust's se_type for OLS, sandwich::vcovHC for logits)
+
+robust_se_type <- "HC3"
+
+robust_vcov <- function(model) {
+  if (inherits(model, "glm")) vcovHC(model, type = robust_se_type) else vcov(model)
 }
 
 ### ----- Regression tables (texreg) -----
@@ -184,9 +218,10 @@ regression_coef_map <- function(data) {
   }
   c(set_names(treatment_names[-1], str_c("treatment", names(treatment_names)[-1])),
     "criterionstrict" = "Strict criterion",
-    "lambda_i_adj" = "Loss aversion ($\\lambda_i$)",
-    "treatment2_lambda_i_adj" = str_c(treatment_names[["2"]], " $\\times$ loss aversion"),
-    "demo_sets_attempted" = "Sets attempted", "demo_sets_completed" = "Sets completed", "demo_mistakes" = "Mistakes",
+    "lambda_i_adj" = "Loss aversion",
+    "treatment2_lambda_i_adj" = str_c(treatment_names[["2"]], " $\\times$ Loss aversion"),
+    "demo_sets_attempted" = "Baseline sets attempted", "demo_sets_completed" = "Baseline sets completed",
+    "demo_mistakes" = "Baseline mistakes",
     level_coefs("gender"), level_coefs("race"), level_coefs("income"), level_coefs("edu"),
     "econYes" = "Studied economics",
     level_coefs("occupation"),
@@ -194,15 +229,15 @@ regression_coef_map <- function(data) {
     "(Intercept)" = "Constant")
 }
 
-# Blocks of rows shown under a heading in the full regression tables
+# Blocks of rows shown under a bold heading in the full regression tables (baseline performance has no heading, so that
+# the longest tables fit on a page)
 
 regression_groups <- function(data) {
-  list("Baseline performance (demo task)" = c("demo_sets_attempted", "demo_sets_completed", "demo_mistakes"),
-       "Gender" = str_c("gender", levels(data$gender)[-1]),
-       "Race" = str_c("race", levels(data$race)[-1]),
-       "Household income" = str_c("income", levels(data$income)[-1]),
-       "Education" = str_c("edu", levels(data$edu)[-1]),
-       "Occupation" = str_c("occupation", levels(data$occupation)[-1]))
+  list("\\textbf{Gender}" = str_c("gender", levels(data$gender)[-1]),
+       "\\textbf{Race}" = str_c("race", levels(data$race)[-1]),
+       "\\textbf{Household income}" = str_c("income", levels(data$income)[-1]),
+       "\\textbf{Education level}" = str_c("edu", levels(data$edu)[-1]),
+       "\\textbf{Occupation}" = str_c("occupation", levels(data$occupation)[-1]))
 }
 
 # Describe a list of items in prose ("a, b and c")
@@ -215,39 +250,41 @@ prose_list <- function(items) {
 # "la" (loss aversion interaction); covariates are the covariates in the specifications that control for them
 
 regression_note <- function(models, data, type, covariates, outcome_note = NULL) {
-  covariate_prose <- c(gender = "gender", race = "race", income = "household income", edu = "education",
+  covariate_prose <- c(gender = "gender", race = "race", income = "household income", edu = "education level",
                        econ = "economics studies", occupation = "occupation", mouse = "mouse use")
   estimator <- if (inherits(models[[1]], "glm")) {
-    "Logit estimates, with standard errors in parentheses."
+    str_c("Logit estimates, with robust (", robust_se_type, ") standard errors in parentheses.")
   } else {
     str_c("OLS estimates, with heteroskedasticity-robust (", models[[1]]$se_type, ") standard errors in parentheses.")
   }
   controls <- switch(type,
     main = str_c("All specifications control for whether the strict criterion was applied. Baselines are sets attempted, ",
                  "sets completed and mistakes in the demo task; covariates are ", prose_list(covariate_prose[covariates]),
-                 ". Specifications with covariates use the participants who answered all covariate questions."),
+                 ". Specifications with covariates use the participants who answered all covariate questions, except the ",
+                 "few non-binary participants."),
     full = {
       factors <- intersect(c("gender", "race", "income", "edu", "occupation"), covariates)
       omitted <- map_chr(factors, function(var) {
         ref <- levels(data[[var]])[1]
         display <- covariate_level_names[[var]]
-        str_c(covariate_prose[[var]], " (", latex_dollars(if (ref %in% names(display)) display[[ref]] else ref), ")")
+        latex_dollars(if (ref %in% names(display)) display[[ref]] else ref)
       })
-      str_c("Omitted categories are the lenient criterion and, for covariates, ", prose_list(omitted),
-            ". Specifications with covariates use the participants who answered all covariate questions.")
+      str_c("Omitted categories: ", prose_list(c(treatment_names[["1"]], "lenient criterion", omitted)),
+            ". Baseline variables are from the demo task. Columns (2) and (4) exclude participants with missing ",
+            "covariates and the few non-binary participants.")
     },
     la = str_c("Loss aversion is the participant's estimated $\\lambda_i$, top-coded at 4.33 and bottom-coded at 0. ",
                "Both specifications control for baseline performance in the demo task (sets attempted, sets completed ",
                "and mistakes); column (2) also controls for ", prose_list(covariate_prose[covariates]),
                ". The sample is the participants whose loss aversion could be estimated and, in column (2), who answered ",
-               "all covariate questions."))
-  nan_columns <- which(map_lgl(models, ~ any(is.nan(sqrt(diag(vcov(.x)))))))
+               "all covariate questions, except the few non-binary participants."))
+  nan_columns <- which(map_lgl(models, ~ any(is.nan(sqrt(diag(robust_vcov(.x)))))))
   nan_note <- if (length(nan_columns) > 0) {
     str_c("Standard errors in column", if (length(nan_columns) > 1) "s" else "", " ",
           prose_list(str_c("(", nan_columns, ")")), " cannot be computed.")
   }
-  str_c(c(estimator, outcome_note, str_c("The omitted group is ", treatment_names[["1"]], "."),
-          controls, nan_note, star_note), collapse = " ")
+  omitted_group <- if (type != "full") str_c("The omitted group is ", treatment_names[["1"]], ".") #full: listed in controls
+  str_c(c(estimator, outcome_note, omitted_group, controls, nan_note, star_note), collapse = " ")
 }
 
 # Save a regression table as LaTeX: columns numbered (1), (2), ..., labelled rows, the number of observations as the
@@ -262,7 +299,11 @@ save_regression_tex <- function(models, file, outcome, coef_map, note, groups = 
   group_rows <- groups %>%
     map(~ which(names(coef_map) %in% .x)) %>%
     discard(~ length(.x) == 0)
+  # Logits: replace texreg's default standard errors and p-values with robust ones (lm_robust models already have them)
+  robust_tests <- if (inherits(models[[1]], "glm")) map(models, ~ coeftest(.x, vcov. = robust_vcov(.x)))
   tabular <- texreg(models, digits = 2, stars = star_levels, include.ci = FALSE,
+                    override.se = if (is.null(robust_tests)) 0 else map(robust_tests, ~ .x[, 2]),
+                    override.pvalues = if (is.null(robust_tests)) 0 else map(robust_tests, ~ .x[, 4]),
                     custom.header = set_names(list(seq_along(models)), outcome),
                     custom.model.names = str_c("(", seq_along(models), ")"),
                     custom.coef.map = as.list(coef_map),
@@ -340,8 +381,9 @@ tidy_tests <- function(tests) {
     bind_rows(.id = "test")
 }
 
-# P-value of a linear hypothesis test on regression coefficients (NA if it cannot be computed, e.g. NaN standard errors)
+# P-value of a linear hypothesis test on regression coefficients, using the same robust standard errors as the tables
+# (NA if it cannot be computed, e.g. NaN standard errors)
 
 lh_p_value <- function(model, hypothesis) {
-  tryCatch(linearHypothesis(model, hypothesis)[2, "Pr(>Chisq)"], error = function(e) NA_real_)
+  tryCatch(linearHypothesis(model, hypothesis, vcov. = robust_vcov(model))[2, "Pr(>Chisq)"], error = function(e) NA_real_)
 }

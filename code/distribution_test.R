@@ -84,7 +84,7 @@ distribution_tests_pooled <- list(
 
 print(distribution_tests_pooled, n = Inf)
 
-write_csv(distribution_tests_pooled, "results/numbers_in_paper/distribution_tests_pooled.csv")
+write_with_retry(function() write_csv(distribution_tests_pooled, "results/numbers_in_paper/distribution_tests_pooled.csv"))
 
 # ----- Numbers cited in the text -----
 

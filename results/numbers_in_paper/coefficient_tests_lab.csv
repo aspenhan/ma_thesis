@@ -1,7 +1,7 @@
 outcome,model,p.value
-Accuracy target,Model 3,0.02371739466253752
-Accuracy target,Model 4,0.03826138055981425
-Mistake rate,Model 3,0.3189156340075255
-Mistake rate,Model 4,NA
-Sets completed,Model 3,0.4751845269236997
-Sets completed,Model 4,NA
+Accuracy target,Baselines,0.031076873188720898
+Accuracy target,Baselines and covariates,0.18907230677988157
+Mistake rate,Baselines,0.339264507256996
+Mistake rate,Baselines and covariates,0.8100724532288225
+Sets completed,Baselines,0.4876409794555477
+Sets completed,Baselines and covariates,0.22555506856754015

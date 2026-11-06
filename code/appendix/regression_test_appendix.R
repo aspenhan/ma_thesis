@@ -20,9 +20,9 @@ slider_class_data <- read_rds("data/slider_class_data_clean.rds")
 
 ## ----- Prepare data -----
 
-# Relevel education
+# Recode covariates for the regressions (see prepare_regression_covariates in setup.R)
 
-slider_lab_data$edu <- relevel(slider_lab_data$edu, ref = "College degree or above")
+slider_lab_data <- prepare_regression_covariates(slider_lab_data)
 
 # Create variable for target achievement
 
@@ -59,13 +59,13 @@ save_regression_tex(reg_target_lab_models, "output/tables/reg_target_lab.tex",
 
 ## ----- Regression (2): mistake rate -----
 
-reg_mistakes_lab_basic <- lm_robust(mistake_rate ~ treatment + criterion, slider_lab_data)
+reg_mistakes_lab_basic <- lm_robust(mistake_rate ~ treatment + criterion, slider_lab_data, se_type = robust_se_type)
 
-reg_mistakes_lab_baselines <- lm_robust(mistake_rate ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes, slider_lab_data)
+reg_mistakes_lab_baselines <- lm_robust(mistake_rate ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes, slider_lab_data, se_type = robust_se_type)
 
-reg_mistakes_lab_covariates <- lm_robust(mistake_rate ~ treatment + criterion + gender + race + income + edu + econ + occupation + mouse, slider_lab_data)
+reg_mistakes_lab_covariates <- lm_robust(mistake_rate ~ treatment + criterion + gender + race + income + edu + econ + occupation + mouse, slider_lab_data, se_type = robust_se_type)
 
-reg_mistakes_lab_full <- lm_robust(mistake_rate ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes + gender + race + income + edu + econ + occupation + mouse, slider_lab_data)
+reg_mistakes_lab_full <- lm_robust(mistake_rate ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes + gender + race + income + edu + econ + occupation + mouse, slider_lab_data, se_type = robust_se_type)
 
 reg_mistakes_lab_models <- list(reg_mistakes_lab_basic, reg_mistakes_lab_covariates, reg_mistakes_lab_baselines, reg_mistakes_lab_full)
 
@@ -76,13 +76,13 @@ save_regression_tex(reg_mistakes_lab_models, "output/tables/reg_mistakes_lab.tex
 
 ## ----- Regression (3): sets completed -----
 
-reg_sets_lab_basic <- lm_robust(sets_completed ~ treatment + criterion, slider_lab_data)
+reg_sets_lab_basic <- lm_robust(sets_completed ~ treatment + criterion, slider_lab_data, se_type = robust_se_type)
 
-reg_sets_lab_baselines <- lm_robust(sets_completed ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes, slider_lab_data)
+reg_sets_lab_baselines <- lm_robust(sets_completed ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes, slider_lab_data, se_type = robust_se_type)
 
-reg_sets_lab_covariates <- lm_robust(sets_completed ~ treatment + criterion + gender + race + income + edu + econ + occupation + mouse, slider_lab_data)
+reg_sets_lab_covariates <- lm_robust(sets_completed ~ treatment + criterion + gender + race + income + edu + econ + occupation + mouse, slider_lab_data, se_type = robust_se_type)
 
-reg_sets_lab_full <- lm_robust(sets_completed ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes + gender + race + income + edu + econ + occupation + mouse, slider_lab_data)
+reg_sets_lab_full <- lm_robust(sets_completed ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes + gender + race + income + edu + econ + occupation + mouse, slider_lab_data, se_type = robust_se_type)
 
 reg_sets_lab_models <- list(reg_sets_lab_basic, reg_sets_lab_covariates, reg_sets_lab_baselines, reg_sets_lab_full)
 
@@ -93,11 +93,11 @@ save_regression_tex(reg_sets_lab_models, "output/tables/reg_sets_lab.tex",
 
 ## ----- Tests of equality of treatment coefficients -----
 
-# Treatments 2 vs 3 (models 3 and 4)
+# Treatments 2 vs 3, in the specifications that control for baseline performance, without and with covariates
 
 coefficient_tests_lab <- tibble(
   outcome = rep(c("Accuracy target", "Mistake rate", "Sets completed"), each = 2),
-  model = rep(c("Model 3", "Model 4"), times = 3),
+  model = rep(c("Baselines", "Baselines and covariates"), times = 3),
   p.value = c(lh_p_value(reg_target_lab_baselines, "treatment2 = treatment3"),
               lh_p_value(reg_target_lab_full, "treatment2 = treatment3"),
               lh_p_value(reg_mistakes_lab_baselines, "treatment2 = treatment3"),
@@ -107,7 +107,7 @@ coefficient_tests_lab <- tibble(
 
 print(coefficient_tests_lab)
 
-write_csv(coefficient_tests_lab, "results/numbers_in_paper/coefficient_tests_lab.csv")
+write_with_retry(function() write_csv(coefficient_tests_lab, "results/numbers_in_paper/coefficient_tests_lab.csv"))
 
 # ----- Class sample -----
 
@@ -115,9 +115,9 @@ write_csv(coefficient_tests_lab, "results/numbers_in_paper/coefficient_tests_lab
 
 ## ----- Prepare data -----
 
-# Relevel education
+# Recode covariates for the regressions (see prepare_regression_covariates in setup.R)
 
-slider_class_data$edu <- relevel(slider_class_data$edu, ref = "College degree or above")
+slider_class_data <- prepare_regression_covariates(slider_class_data)
 
 # Create variable for target achievement
 
@@ -152,13 +152,13 @@ save_regression_tex(reg_target_class_models, "output/tables/reg_target_class.tex
 
 ## ----- Regression (2): mistake rate -----
 
-reg_mistakes_class_basic <- lm_robust(mistake_rate ~ treatment + criterion, slider_class_data)
+reg_mistakes_class_basic <- lm_robust(mistake_rate ~ treatment + criterion, slider_class_data, se_type = robust_se_type)
 
-reg_mistakes_class_baselines <- lm_robust(mistake_rate ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes, slider_class_data)
+reg_mistakes_class_baselines <- lm_robust(mistake_rate ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes, slider_class_data, se_type = robust_se_type)
 
-reg_mistakes_class_covariates <- lm_robust(mistake_rate ~ treatment + criterion + gender + race + income + mouse, slider_class_data)
+reg_mistakes_class_covariates <- lm_robust(mistake_rate ~ treatment + criterion + gender + race + income + mouse, slider_class_data, se_type = robust_se_type)
 
-reg_mistakes_class_full <- lm_robust(mistake_rate ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes + gender + race + income + mouse, slider_class_data)
+reg_mistakes_class_full <- lm_robust(mistake_rate ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes + gender + race + income + mouse, slider_class_data, se_type = robust_se_type)
 
 reg_mistakes_class_models <- list(reg_mistakes_class_basic, reg_mistakes_class_covariates, reg_mistakes_class_baselines, reg_mistakes_class_full)
 
@@ -169,13 +169,13 @@ save_regression_tex(reg_mistakes_class_models, "output/tables/reg_mistakes_class
 
 ## ----- Regression (3): sets completed -----
 
-reg_sets_class_basic <- lm_robust(sets_completed ~ treatment + criterion, slider_class_data)
+reg_sets_class_basic <- lm_robust(sets_completed ~ treatment + criterion, slider_class_data, se_type = robust_se_type)
 
-reg_sets_class_baselines <- lm_robust(sets_completed ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes, slider_class_data)
+reg_sets_class_baselines <- lm_robust(sets_completed ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes, slider_class_data, se_type = robust_se_type)
 
-reg_sets_class_covariates <- lm_robust(sets_completed ~ treatment + criterion + gender + race + income + mouse, slider_class_data)
+reg_sets_class_covariates <- lm_robust(sets_completed ~ treatment + criterion + gender + race + income + mouse, slider_class_data, se_type = robust_se_type)
 
-reg_sets_class_full <- lm_robust(sets_completed ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes + gender + race + income + mouse, slider_class_data)
+reg_sets_class_full <- lm_robust(sets_completed ~ treatment + criterion + demo_sets_attempted + demo_sets_completed + demo_mistakes + gender + race + income + mouse, slider_class_data, se_type = robust_se_type)
 
 reg_sets_class_models <- list(reg_sets_class_basic, reg_sets_class_covariates, reg_sets_class_baselines, reg_sets_class_full)
 
@@ -186,11 +186,11 @@ save_regression_tex(reg_sets_class_models, "output/tables/reg_sets_class.tex",
 
 ## ----- Tests of equality of treatment coefficients -----
 
-# Treatments 2 vs 3 (models 3 and 4)
+# Treatments 2 vs 3, in the specifications that control for baseline performance, without and with covariates
 
 coefficient_tests_class <- tibble(
   outcome = rep(c("Accuracy target", "Mistake rate", "Sets completed"), each = 2),
-  model = rep(c("Model 3", "Model 4"), times = 3),
+  model = rep(c("Baselines", "Baselines and covariates"), times = 3),
   p.value = c(lh_p_value(reg_target_class_baselines, "treatment2 = treatment3"),
               lh_p_value(reg_target_class_full, "treatment2 = treatment3"),
               lh_p_value(reg_mistakes_class_baselines, "treatment2 = treatment3"),
@@ -200,14 +200,16 @@ coefficient_tests_class <- tibble(
 
 print(coefficient_tests_class)
 
-write_csv(coefficient_tests_class, "results/numbers_in_paper/coefficient_tests_class.csv")
+write_with_retry(function() write_csv(coefficient_tests_class, "results/numbers_in_paper/coefficient_tests_class.csv"))
 
 # ----- Numbers cited in the text -----
 
-# Treatment 2 vs 3 coefficient tests (e.g. CoefTestLabAccuracyTargetModelThreePval)
+# Treatment 2 vs 3 coefficient tests cited in the text: only the lab sample's accuracy target tests
+# (e.g. CoefTestLabAccuracyTargetBaselinesPval); all the tests are in results/numbers_in_paper/coefficient_tests_*.csv
 
-write_tex_macros(c(p_value_macros(str_c(coefficient_tests_lab$outcome, " ", coefficient_tests_lab$model),
-                                  coefficient_tests_lab$p.value, "CoefTestLab"),
-                   p_value_macros(str_c(coefficient_tests_class$outcome, " ", coefficient_tests_class$model),
-                                  coefficient_tests_class$p.value, "CoefTestClass")),
+coefficient_tests_lab_cited <- coefficient_tests_lab %>%
+  filter(outcome == "Accuracy target")
+
+write_tex_macros(p_value_macros(str_c(coefficient_tests_lab_cited$outcome, " ", coefficient_tests_lab_cited$model),
+                                coefficient_tests_lab_cited$p.value, "CoefTestLab"),
                  "output/numbers/regression_numbers_appendix.tex")

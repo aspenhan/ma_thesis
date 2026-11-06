@@ -7,24 +7,24 @@
 \cmidrule(lr){2-3}
  & (1) & (2) \\
 \midrule
-Lenient with Plan                        & $1.28^{*}$   & $1.07$       \\
-                                         & $(0.78)$     & $(0.83)$     \\
-Strict with Plan                         & $0.71$       & $0.50$       \\
-                                         & $(0.56)$     & $(0.61)$     \\
-Lenient without Plan                     & $1.45^{**}$  & $1.40^{**}$  \\
-                                         & $(0.70)$     & $(0.71)$     \\
-Strict criterion                         & $0.15$       & $0.26$       \\
-                                         & $(0.53)$     & $(0.53)$     \\
-Loss aversion ($\lambda_i$)              & $0.11$       & $0.12$       \\
+Lenient with Plan                        & $1.28$       & $1.01$       \\
+                                         & $(0.79)$     & $(0.87)$     \\
+Strict with Plan                         & $0.71$       & $0.47$       \\
+                                         & $(0.56)$     & $(0.64)$     \\
+Lenient without Plan                     & $1.45^{**}$  & $1.29^{*}$   \\
+                                         & $(0.71)$     & $(0.74)$     \\
+Strict criterion                         & $0.15$       & $0.29$       \\
+                                         & $(0.54)$     & $(0.56)$     \\
+Loss aversion                            & $0.11$       & $0.10$       \\
                                          & $(0.14)$     & $(0.14)$     \\
-Lenient with Plan $\times$ loss aversion & $-0.05$      & $-0.06$      \\
-                                         & $(0.26)$     & $(0.26)$     \\
-Constant                                 & $8.21^{***}$ & $9.31^{***}$ \\
-                                         & $(1.11)$     & $(1.43)$     \\
+Lenient with Plan $\times$ Loss aversion & $-0.05$      & $-0.02$      \\
+                                         & $(0.26)$     & $(0.28)$     \\
+Constant                                 & $8.21^{***}$ & $9.47^{***}$ \\
+                                         & $(1.13)$     & $(1.51)$     \\
 \midrule
 Baselines                                & Yes          & Yes          \\
 Covariates                               & No           & Yes          \\
-Observations                                & $503$        & $460$        \\
+Observations                                & $503$        & $453$        \\
 \bottomrule
 \end{tabular}
 }%
@@ -32,5 +32,5 @@ Observations                                & $503$        & $460$        \\
 \usebox{\regtablebox}
 
 \smallskip
-{\footnotesize\raggedright\textit{Notes:} OLS estimates, with heteroskedasticity-robust (HC2) standard errors in parentheses. The omitted group is Control. Loss aversion is the participant's estimated $\lambda_i$, top-coded at 4.33 and bottom-coded at 0. Both specifications control for baseline performance in the demo task (sets attempted, sets completed and mistakes); column (2) also controls for gender, race, household income, education, economics studies, occupation and mouse use. The sample is the participants whose loss aversion could be estimated and, in column (2), who answered all covariate questions. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.1$.\par}
+{\footnotesize\raggedright\textit{Notes:} OLS estimates, with heteroskedasticity-robust (HC3) standard errors in parentheses. The omitted group is Control. Loss aversion is the participant's estimated $\lambda_i$, top-coded at 4.33 and bottom-coded at 0. Both specifications control for baseline performance in the demo task (sets attempted, sets completed and mistakes); column (2) also controls for gender, race, household income, education level, economics studies, occupation and mouse use. The sample is the participants whose loss aversion could be estimated and, in column (2), who answered all covariate questions, except the few non-binary participants. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.1$.\par}
 \end{minipage}

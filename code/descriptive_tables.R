@@ -41,7 +41,7 @@ covariates_all <- c("gender", "race", "age", "income", "edu", "econ", "occupatio
 
 covariates_class <- c("gender", "race", "age", "income", "mouse")
 
-# Summary of covariates by treatment group: proportions for categories, mean (SD) for age
+# Summary of covariates by treatment group: proportions for categories, the mean for age
 
 covariate_summary <- function(data, vars) {
   data %>%
@@ -52,7 +52,7 @@ covariate_summary <- function(data, vars) {
       missing = "no",
       type = where(is.numeric) ~ "continuous",
       label = as.list(covariate_names[vars]),
-      statistic = list(all_continuous() ~ "{mean} ({sd})",
+      statistic = list(all_continuous() ~ "{mean}",
                        all_categorical() ~ "{p}"),
       digits = list(all_continuous() ~ 1,
                     all_categorical() ~ list(p = label_style_number(digits = 2))))
@@ -87,8 +87,8 @@ covariate_table <- function(data, vars, seed) {
   yes_no <- str_to_lower(covariate_names[intersect(c("econ", "mouse"), vars)])
 
   note <- str_c("Each cell is the proportion of participants in the category, among those who answered the question ",
-                "(for ", prose_list(yes_no), ", the proportion answering yes), except for age, which is the mean with ",
-                "the standard deviation in parentheses. The p-values test for differences between the four treatment ",
+                "(for ", prose_list(yes_no), ", the proportion answering yes), except for age, which is the mean. ",
+                "The p-values test for differences between the four treatment ",
                 "groups, using (a) Fisher's exact test, simulated with 10,000 replicates, and the Kruskal--Wallis test ",
                 "for age, and (b) Pearson's CHISQUARED test and Welch's one-way F test for age. ",
                 "*** p < 0.01, ** p < 0.05, * p < 0.1.")
@@ -181,7 +181,7 @@ balance_tests <- list(lab = balance_test_lab, micro = balance_test_micro,
 
 print(balance_tests)
 
-write_csv(balance_tests, "results/numbers_in_paper/balance_tests.csv")
+write_with_retry(function() write_csv(balance_tests, "results/numbers_in_paper/balance_tests.csv"))
 
 # ----- Slider task performance summary tables -----
 
@@ -224,7 +224,7 @@ save_performance_tex <- function(tbl, file, note = performance_note) {
 
 save_performance_tex(performance_summary(slider_data, "Pooled"), "output/tables/performance_sumstats_pooled.tex")
 
-save_performance_tex(performance_summary(slider_lab_data, "RFCDR lab"), "output/tables/performance_sumstats_lab.tex")
+save_performance_tex(performance_summary(slider_lab_data, "Lab"), "output/tables/performance_sumstats_lab.tex")
 
 save_performance_tex(performance_summary(slider_micro_data, "Microeconomics class"), "output/tables/performance_sumstats_micro.tex")
 
@@ -234,9 +234,9 @@ save_performance_tex(performance_summary(slider_macro_data, "Macroeconomics clas
 
 tbl_stack(list(performance_summary(slider_data), performance_summary(slider_lab_data),
                performance_summary(slider_micro_data), performance_summary(slider_macro_data)),
-          group_header = c("Pooled", "RFCDR lab", "Microeconomics class", "Macroeconomics class")) %>%
+          group_header = c("Pooled", "Lab", "Microeconomics class", "Macroeconomics class")) %>%
   save_performance_tex("output/tables/performance_sumstats.tex",
-                       note = str_c(performance_note, " The pooled sample combines the RFCDR lab and both class samples."))
+                       note = str_c(performance_note, " The pooled sample combines the lab and both class samples."))
 
 # ----- Tests of performance differences between subsamples -----
 
@@ -271,7 +271,7 @@ subsample_performance_tests <- list(
 
 print(subsample_performance_tests, n = Inf)
 
-write_csv(subsample_performance_tests, "results/numbers_in_paper/subsample_performance_tests.csv")
+write_with_retry(function() write_csv(subsample_performance_tests, "results/numbers_in_paper/subsample_performance_tests.csv"))
 
 # ----- Numbers cited in the text -----
 

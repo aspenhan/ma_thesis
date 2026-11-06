@@ -86,7 +86,7 @@ distribution_tests_lab <- list(
 
 print(distribution_tests_lab, n = Inf)
 
-write_csv(distribution_tests_lab, "results/numbers_in_paper/distribution_tests_lab.csv")
+write_with_retry(function() write_csv(distribution_tests_lab, "results/numbers_in_paper/distribution_tests_lab.csv"))
 
 # ----- Class sample -----
 
@@ -156,7 +156,7 @@ distribution_tests_class <- list(
 
 print(distribution_tests_class, n = Inf)
 
-write_csv(distribution_tests_class, "results/numbers_in_paper/distribution_tests_class.csv")
+write_with_retry(function() write_csv(distribution_tests_class, "results/numbers_in_paper/distribution_tests_class.csv"))
 
 # ----- Numbers cited in the text -----
 

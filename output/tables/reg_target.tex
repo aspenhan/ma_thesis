@@ -7,18 +7,16 @@
 \cmidrule(lr){2-5}
  & (1) & (2) & (3) & (4) \\
 \midrule
-Lenient with Plan    & $-0.53$      & $-0.35$      & $-0.76^{*}$  & $-0.54$     \\
-                     & $(0.38)$     & $(0.44)$     & $(0.40)$     & $(0.46)$    \\
-Strict with Plan     & $-0.52^{*}$  & $-0.57^{*}$  & $-0.42$      & $-0.47$     \\
-                     & $(0.29)$     & $(0.33)$     & $(0.32)$     & $(0.37)$    \\
-Lenient without Plan & $-0.03$      & $-0.12$      & $-0.08$      & $-0.08$     \\
-                     & $(0.43)$     & $(0.47)$     & $(0.46)$     & $(0.51)$    \\
-Constant             & $3.41^{***}$ & $3.00^{***}$ & $3.29^{***}$ & $2.36^{**}$ \\
-                     & $(0.43)$     & $(0.76)$     & $(0.68)$     & $(0.99)$    \\
+Lenient with Plan    & $-0.53$     & $-0.33$     & $-0.76^{*}$ & $-0.51$  \\
+                     & $(0.38)$    & $(0.44)$    & $(0.40)$    & $(0.47)$ \\
+Strict with Plan     & $-0.52^{*}$ & $-0.57^{*}$ & $-0.42$     & $-0.47$  \\
+                     & $(0.29)$    & $(0.34)$    & $(0.32)$    & $(0.39)$ \\
+Lenient without Plan & $-0.03$     & $-0.11$     & $-0.08$     & $-0.08$  \\
+                     & $(0.42)$    & $(0.45)$    & $(0.47)$    & $(0.51)$ \\
 \midrule
-Baselines            & No           & No           & Yes          & Yes         \\
-Covariates           & No           & Yes          & No           & Yes         \\
-Observations            & $642$        & $549$        & $642$        & $549$       \\
+Baselines            & No          & No          & Yes         & Yes      \\
+Covariates           & No          & Yes         & No          & Yes      \\
+Observations            & $642$       & $542$       & $642$       & $542$    \\
 \bottomrule
 \end{tabular}
 }%
@@ -26,5 +24,5 @@ Observations            & $642$        & $549$        & $642$        & $549$    
 \usebox{\regtablebox}
 
 \smallskip
-{\footnotesize\raggedright\textit{Notes:} Logit estimates, with standard errors in parentheses. The outcome is meeting the accuracy target, that is, a recorded mistake rate of at most 10\%. The omitted group is Control. All specifications control for whether the strict criterion was applied. Baselines are sets attempted, sets completed and mistakes in the demo task; covariates are gender, race, household income, education, economics studies, occupation and mouse use. Specifications with covariates use the participants who answered all covariate questions. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.1$.\par}
+{\footnotesize\raggedright\textit{Notes:} Logit estimates, with robust (HC3) standard errors in parentheses. The outcome is meeting the accuracy target, that is, a recorded mistake rate of at most 10\%. The omitted group is Control. All specifications control for whether the strict criterion was applied. Baselines are sets attempted, sets completed and mistakes in the demo task; covariates are gender, race, household income, education level, economics studies, occupation and mouse use. Specifications with covariates use the participants who answered all covariate questions, except the few non-binary participants. $^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.1$.\par}
 \end{minipage}
