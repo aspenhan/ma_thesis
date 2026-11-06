@@ -30,6 +30,16 @@ slider_lab_data <- slider_lab_data %>%
   mutate(accuracy_target = if_else(recorded_mistake_rate <= 10, "Yes", "No"),
          accuracy_target = factor(accuracy_target, levels = c("No", "Yes")))
 
+# Table options: row labels, blocks of rows under a heading, and the covariates controlled for
+
+lab_coef_labels <- regression_coef_map(slider_lab_data)
+
+lab_groups <- regression_groups(slider_lab_data)
+
+lab_covariates <- c("gender", "race", "income", "edu", "econ", "occupation", "mouse")
+
+target_note <- "The outcome is meeting the accuracy target, that is, a recorded mistake rate of at most 10\\%."
+
 ## ----- Regression (1): accuracy target achievement -----
 
 reg_target_lab_basic <- glm(accuracy_target ~ treatment + criterion, family = binomial, data = slider_lab_data)
@@ -42,13 +52,10 @@ reg_target_lab_full <- glm(accuracy_target ~ treatment + criterion + demo_sets_a
 
 reg_target_lab_models <- list(reg_target_lab_basic, reg_target_lab_covariates, reg_target_lab_baselines, reg_target_lab_full)
 
-reg_target_lab_tbl <- texreg(reg_target_lab_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Log odds of achieving accuracy target" = 1:4),
-                         include.deviance = FALSE,
-                         table = FALSE)
-
-save_texreg_tex(reg_target_lab_tbl, "output/tables/reg_target_lab.tex")
+save_regression_tex(reg_target_lab_models, "output/tables/reg_target_lab.tex",
+                    outcome = "Log odds of meeting the accuracy target", coef_map = lab_coef_labels,
+                    groups = lab_groups, note_size = "",
+                    note = regression_note(reg_target_lab_models, slider_lab_data, "full", lab_covariates, target_note))
 
 ## ----- Regression (2): mistake rate -----
 
@@ -62,13 +69,10 @@ reg_mistakes_lab_full <- lm_robust(mistake_rate ~ treatment + criterion + demo_s
 
 reg_mistakes_lab_models <- list(reg_mistakes_lab_basic, reg_mistakes_lab_covariates, reg_mistakes_lab_baselines, reg_mistakes_lab_full)
 
-reg_mistakes_lab_tbl <- texreg(reg_mistakes_lab_models, digits = 2,
-                               stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                               custom.header = list("Mistake rate" = 1:4),
-                               include.deviance = FALSE,
-                               table = FALSE)
-
-save_texreg_tex(reg_mistakes_lab_tbl, "output/tables/reg_mistakes_lab.tex")
+save_regression_tex(reg_mistakes_lab_models, "output/tables/reg_mistakes_lab.tex",
+                    outcome = "Mistake rate (\\%)", coef_map = lab_coef_labels,
+                    groups = lab_groups, note_size = "",
+                    note = regression_note(reg_mistakes_lab_models, slider_lab_data, "full", lab_covariates))
 
 ## ----- Regression (3): sets completed -----
 
@@ -82,13 +86,10 @@ reg_sets_lab_full <- lm_robust(sets_completed ~ treatment + criterion + demo_set
 
 reg_sets_lab_models <- list(reg_sets_lab_basic, reg_sets_lab_covariates, reg_sets_lab_baselines, reg_sets_lab_full)
 
-reg_sets_lab_tbl <- texreg(reg_sets_lab_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Sets completed" = 1:4),
-                         include.deviance = FALSE,
-                         table = FALSE)
-
-save_texreg_tex(reg_sets_lab_tbl, "output/tables/reg_sets_lab.tex")
+save_regression_tex(reg_sets_lab_models, "output/tables/reg_sets_lab.tex",
+                    outcome = "Sets completed", coef_map = lab_coef_labels,
+                    groups = lab_groups, note_size = "",
+                    note = regression_note(reg_sets_lab_models, slider_lab_data, "full", lab_covariates))
 
 ## ----- Tests of equality of treatment coefficients -----
 
@@ -124,6 +125,14 @@ slider_class_data <- slider_class_data %>%
   mutate(accuracy_target = if_else(recorded_mistake_rate <= 10, "Yes", "No"),
          accuracy_target = factor(accuracy_target, levels = c("No", "Yes")))
 
+# Table options: row labels, blocks of rows under a heading, and the covariates controlled for
+
+class_coef_labels <- regression_coef_map(slider_class_data)
+
+class_groups <- regression_groups(slider_class_data)
+
+class_covariates <- c("gender", "race", "income", "mouse")
+
 ## ----- Regression (1): accuracy target achievement -----
 
 reg_target_class_basic <- glm(accuracy_target ~ treatment + criterion, family = binomial, data = slider_class_data)
@@ -136,13 +145,10 @@ reg_target_class_full <- glm(accuracy_target ~ treatment + criterion + demo_sets
 
 reg_target_class_models <- list(reg_target_class_basic, reg_target_class_covariates, reg_target_class_baselines, reg_target_class_full)
 
-reg_target_class_tbl <- texreg(reg_target_class_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Log odds of achieving accuracy target" = 1:4),
-                         include.deviance = FALSE,
-                         table = FALSE)
-
-save_texreg_tex(reg_target_class_tbl, "output/tables/reg_target_class.tex")
+save_regression_tex(reg_target_class_models, "output/tables/reg_target_class.tex",
+                    outcome = "Log odds of meeting the accuracy target", coef_map = class_coef_labels,
+                    groups = class_groups, note_size = "",
+                    note = regression_note(reg_target_class_models, slider_class_data, "full", class_covariates, target_note))
 
 ## ----- Regression (2): mistake rate -----
 
@@ -156,13 +162,10 @@ reg_mistakes_class_full <- lm_robust(mistake_rate ~ treatment + criterion + demo
 
 reg_mistakes_class_models <- list(reg_mistakes_class_basic, reg_mistakes_class_covariates, reg_mistakes_class_baselines, reg_mistakes_class_full)
 
-reg_mistakes_class_tbl <- texreg(reg_mistakes_class_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Mistake rate" = 1:4),
-                         include.deviance = FALSE,
-                         table = FALSE)
-
-save_texreg_tex(reg_mistakes_class_tbl, "output/tables/reg_mistakes_class.tex")
+save_regression_tex(reg_mistakes_class_models, "output/tables/reg_mistakes_class.tex",
+                    outcome = "Mistake rate (\\%)", coef_map = class_coef_labels,
+                    groups = class_groups, note_size = "",
+                    note = regression_note(reg_mistakes_class_models, slider_class_data, "full", class_covariates))
 
 ## ----- Regression (3): sets completed -----
 
@@ -176,13 +179,10 @@ reg_sets_class_full <- lm_robust(sets_completed ~ treatment + criterion + demo_s
 
 reg_sets_class_models <- list(reg_sets_class_basic, reg_sets_class_covariates, reg_sets_class_baselines, reg_sets_class_full)
 
-reg_sets_class_tbl <- texreg(reg_sets_class_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Sets completed" = 1:4),
-                         include.deviance = FALSE,
-                         table = FALSE)
-
-save_texreg_tex(reg_sets_class_tbl, "output/tables/reg_sets_class.tex")
+save_regression_tex(reg_sets_class_models, "output/tables/reg_sets_class.tex",
+                    outcome = "Sets completed", coef_map = class_coef_labels,
+                    groups = class_groups, note_size = "",
+                    note = regression_note(reg_sets_class_models, slider_class_data, "full", class_covariates))
 
 ## ----- Tests of equality of treatment coefficients -----
 

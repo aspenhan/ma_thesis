@@ -1,49 +1,47 @@
 \fontsize{9.0pt}{11.0pt}\selectfont
-\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash}p{\dimexpr 131.25pt -2\tabcolsep-1.5\arrayrulewidth}ccccc>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 37.50pt -2\tabcolsep-1.5\arrayrulewidth}}
+\begin{tabular*}{\linewidth}{@{\extracolsep{\fill}}>{\raggedright\arraybackslash\hangindent=2em}p{\dimexpr 127.50pt -2\tabcolsep-1.5\arrayrulewidth}ccccc>{\centering\arraybackslash}p{\dimexpr 42.00pt -2\tabcolsep-1.5\arrayrulewidth}>{\centering\arraybackslash}p{\dimexpr 42.00pt -2\tabcolsep-1.5\arrayrulewidth}}
 \toprule
- &  & \multicolumn{4}{c}{\textbf{Treatments}} &  &  \\ 
-\cmidrule(lr){3-6}
-\textbf{Metric} & \textbf{All}\textsuperscript{\textit{1}} & \textbf{1}\textsuperscript{\textit{1}} & \textbf{2}\textsuperscript{\textit{1}} & \textbf{3}\textsuperscript{\textit{1}} & \textbf{4}\textsuperscript{\textit{1}} & \textbf{p-value}\textsuperscript{\textit{2,3}} & \textbf{p-value}\textsuperscript{\textit{3,4}} \\ 
+ &  & \multicolumn{4}{c}{Treatment group} & \multicolumn{2}{c}{p-value} \\ 
+\cmidrule(lr){3-6} \cmidrule(lr){7-8}
+ & All & Control & \begin{tabular}[b]{@{}c@{}}Lenient\\with Plan\end{tabular} & \begin{tabular}[b]{@{}c@{}}Strict\\with Plan\end{tabular} & \begin{tabular}[b]{@{}c@{}}Lenient\\without Plan\end{tabular} & (a) & (b) \\ 
 \midrule\addlinespace[2.5pt]
-{\bfseries Gender} &  &  &  &  &  & >0.9 & >0.9 \\ 
-    Male & 63 (30\%) & 17 (29\%) & 14 (29\%) & 16 (31\%) & 16 (32\%) &  &  \\ 
-    Female & 140 (67\%) & 40 (69\%) & 32 (67\%) & 35 (67\%) & 33 (66\%) &  &  \\ 
-    Non-binary & 5 (2.4\%) & 1 (1.7\%) & 2 (4.2\%) & 1 (1.9\%) & 1 (2.0\%) &  &  \\ 
-{\bfseries Race} &  &  &  &  &  & 0.050 & 0.14 \\ 
-    White & 92 (45\%) & 25 (43\%) & 25 (52\%) & 21 (40\%) & 21 (44\%) &  &  \\ 
-    Asian & 68 (33\%) & 13 (22\%) & 18 (38\%) & 18 (35\%) & 19 (40\%) &  &  \\ 
-    Black & 24 (12\%) & 10 (17\%) & 0 (0\%) & 9 (17\%) & 5 (10\%) &  &  \\ 
-    Hispanic & 16 (7.8\%) & 7 (12\%) & 3 (6.3\%) & 3 (5.8\%) & 3 (6.3\%) &  &  \\ 
-    Mixed & 6 (2.9\%) & 3 (5.2\%) & 2 (4.2\%) & 1 (1.9\%) & 0 (0\%) &  &  \\ 
-{\bfseries Age} & 30 (11) & 30 (12) & 31 (13) & 30 (11) & 28 (8) & 0.8 & 0.6 \\ 
-{\bfseries Household Income} &  &  &  &  &  & 0.7 & 0.7 \\ 
-    0 - 24,999 & 46 (23\%) & 12 (22\%) & 12 (27\%) & 8 (16\%) & 14 (29\%) &  &  \\ 
-    25,000 - 49,999 & 34 (17\%) & 11 (20\%) & 4 (9.1\%) & 9 (18\%) & 10 (21\%) &  &  \\ 
-    50,000 - 74,999 & 34 (17\%) & 9 (16\%) & 9 (20\%) & 11 (22\%) & 5 (10\%) &  &  \\ 
-    75,000 - 119,999 & 32 (16\%) & 9 (16\%) & 5 (11\%) & 10 (20\%) & 8 (17\%) &  &  \\ 
-    120,000 - 199,999 & 28 (14\%) & 6 (11\%) & 10 (23\%) & 7 (14\%) & 5 (10\%) &  &  \\ 
-    200,000 and over & 22 (11\%) & 8 (15\%) & 4 (9.1\%) & 4 (8.2\%) & 6 (13\%) &  &  \\ 
-{\bfseries Education Level} &  &  &  &  &  & 0.4 & 0.4 \\ 
-    Below high school diploma & 1 (0.5\%) & 0 (0\%) & 1 (2.2\%) & 0 (0\%) & 0 (0\%) &  &  \\ 
-    High school diploma & 41 (20\%) & 11 (19\%) & 12 (26\%) & 7 (13\%) & 11 (22\%) &  &  \\ 
-    College degree or above & 163 (80\%) & 47 (81\%) & 33 (72\%) & 45 (87\%) & 38 (78\%) &  &  \\ 
-{\bfseries Studied Economics} & 58 (28\%) & 18 (31\%) & 10 (21\%) & 22 (42\%) & 8 (16\%) & 0.017* & 0.017* \\ 
-{\bfseries Occupation} &  &  &  &  &  & 0.6 & 0.5 \\ 
-    Student & 72 (36\%) & 22 (39\%) & 20 (43\%) & 15 (31\%) & 15 (31\%) &  &  \\ 
-    Academia & 30 (15\%) & 6 (11\%) & 6 (13\%) & 6 (12\%) & 12 (24\%) &  &  \\ 
-    Clerical & 13 (6.5\%) & 2 (3.6\%) & 4 (8.5\%) & 6 (12\%) & 1 (2.0\%) &  &  \\ 
-    High-tech mfg or eng & 11 (5.5\%) & 2 (3.6\%) & 1 (2.1\%) & 2 (4.1\%) & 6 (12\%) &  &  \\ 
-    Managerial & 13 (6.5\%) & 4 (7.1\%) & 3 (6.4\%) & 3 (6.1\%) & 3 (6.1\%) &  &  \\ 
-    Professional services & 45 (22\%) & 13 (23\%) & 9 (19\%) & 13 (27\%) & 10 (20\%) &  &  \\ 
-    Unemployed & 11 (5.5\%) & 4 (7.1\%) & 2 (4.3\%) & 3 (6.1\%) & 2 (4.1\%) &  &  \\ 
-    Other & 6 (3.0\%) & 3 (5.4\%) & 2 (4.3\%) & 1 (2.0\%) & 0 (0\%) &  &  \\ 
-{\bfseries Used Mouse} & 122 (58\%) & 33 (55\%) & 31 (63\%) & 31 (60\%) & 27 (54\%) & 0.8 & 0.8 \\ 
+Gender &  &  &  &  &  & >0.99 & 0.99 \\ 
+\quad Male & 0.30 & 0.29 & 0.29 & 0.31 & 0.32 &  &  \\ 
+\quad Female & 0.67 & 0.69 & 0.67 & 0.67 & 0.66 &  &  \\ 
+\quad Non-binary & 0.02 & 0.02 & 0.04 & 0.02 & 0.02 &  &  \\ 
+Race &  &  &  &  &  & 0.050* & 0.14 \\ 
+\quad White & 0.45 & 0.43 & 0.52 & 0.40 & 0.44 &  &  \\ 
+\quad Asian & 0.33 & 0.22 & 0.38 & 0.35 & 0.40 &  &  \\ 
+\quad Black & 0.12 & 0.17 & 0.00 & 0.17 & 0.10 &  &  \\ 
+\quad Hispanic & 0.08 & 0.12 & 0.06 & 0.06 & 0.06 &  &  \\ 
+\quad Mixed & 0.03 & 0.05 & 0.04 & 0.02 & 0.00 &  &  \\ 
+Age & 29.8 (10.8) & 30.0 (11.8) & 30.8 (13.0) & 30.1 (10.5) & 28.3 (7.6) & 0.84 & 0.61 \\ 
+Household income &  &  &  &  &  & 0.67 & 0.66 \\ 
+\quad \$0--24,999 & 0.23 & 0.22 & 0.27 & 0.16 & 0.29 &  &  \\ 
+\quad \$25,000--49,999 & 0.17 & 0.20 & 0.09 & 0.18 & 0.21 &  &  \\ 
+\quad \$50,000--74,999 & 0.17 & 0.16 & 0.20 & 0.22 & 0.10 &  &  \\ 
+\quad \$75,000--119,999 & 0.16 & 0.16 & 0.11 & 0.20 & 0.17 &  &  \\ 
+\quad \$120,000--199,999 & 0.14 & 0.11 & 0.23 & 0.14 & 0.10 &  &  \\ 
+\quad \$200,000 and over & 0.11 & 0.15 & 0.09 & 0.08 & 0.13 &  &  \\ 
+Education &  &  &  &  &  & 0.38 & 0.39 \\ 
+\quad Below high school diploma & 0.00 & 0.00 & 0.02 & 0.00 & 0.00 &  &  \\ 
+\quad High school diploma & 0.20 & 0.19 & 0.26 & 0.13 & 0.22 &  &  \\ 
+\quad College degree or above & 0.80 & 0.81 & 0.72 & 0.87 & 0.78 &  &  \\ 
+Studied economics & 0.28 & 0.31 & 0.21 & 0.42 & 0.16 & 0.017** & 0.017** \\ 
+Occupation &  &  &  &  &  & 0.60 & 0.49 \\ 
+\quad Student & 0.36 & 0.39 & 0.43 & 0.31 & 0.31 &  &  \\ 
+\quad Academia & 0.15 & 0.11 & 0.13 & 0.12 & 0.24 &  &  \\ 
+\quad Clerical & 0.06 & 0.04 & 0.09 & 0.12 & 0.02 &  &  \\ 
+\quad High-tech manufacturing or engineering & 0.05 & 0.04 & 0.02 & 0.04 & 0.12 &  &  \\ 
+\quad Managerial & 0.06 & 0.07 & 0.06 & 0.06 & 0.06 &  &  \\ 
+\quad Professional services & 0.22 & 0.23 & 0.19 & 0.27 & 0.20 &  &  \\ 
+\quad Unemployed & 0.05 & 0.07 & 0.04 & 0.06 & 0.04 &  &  \\ 
+\quad Other & 0.03 & 0.05 & 0.04 & 0.02 & 0.00 &  &  \\ 
+Used mouse & 0.58 & 0.55 & 0.63 & 0.60 & 0.54 & 0.77 & 0.76 \\ 
+\midrule
+Observations & 213 & 60 & 49 & 52 & 52 &  &  \\ 
 \bottomrule
 \end{tabular*}
 \begin{minipage}{\linewidth}
-\textsuperscript{\textit{1}}n (\%); Mean (SD)\\
-\textsuperscript{\textit{2}}Fisher's Exact Test for Count Data with simulated p-value
-(based on 10000 replicates); Kruskal-Wallis rank sum test\\
-\textsuperscript{\textit{3}}*p\textless{}0.05; **p\textless{}0.01; ***p\textless{}0.001\\
-\textsuperscript{\textit{4}}Pearson's Chi-squared test; One-way analysis of means (not assuming equal variances)\\
+\textit{Notes:} Each cell is the proportion of participants in the category, among those who answered the question (for studied economics and used mouse, the proportion answering yes), except for age, which is the mean with the standard deviation in parentheses. The p-values test for differences between the four treatment groups, using (a) Fisher's exact test, simulated with 10,000 replicates, and the Kruskal--Wallis test for age, and (b) Pearson's $\chi^2$ test and Welch's one-way F test for age. *** p < 0.01, ** p < 0.05, * p < 0.1.
 \end{minipage}

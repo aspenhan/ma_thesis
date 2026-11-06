@@ -32,7 +32,7 @@ effort_tradeoff_plot <- ggplot() +
   geom_point(data = effort_comb_count, aes(x = sets_completed, y = mistake_rate, size = n)) +
   geom_smooth(data = slider_data, aes(x = sets_completed, y = mistake_rate),
               method = "loess", linewidth = 1) +
-  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Counts") +
+  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Participants") +
   def_theme
 
 save_figure_pdf(effort_tradeoff_plot, "output/figures/effort_tradeoffs_all.pdf")
@@ -50,7 +50,7 @@ effort_tradeoff_subset_plot <- ggplot() +
   geom_point(data = effort_comb_count_no_outliers, aes(x = sets_completed, y = mistake_rate, size = n)) +
   geom_smooth(data = slider_data_no_outliers, aes(x = sets_completed, y = mistake_rate),
               method = "loess", linewidth = 1) +
-  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Counts") +
+  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Participants") +
   def_theme
 
 save_figure_pdf(effort_tradeoff_subset_plot, "output/figures/effort_tradeoffs_no_outliers.pdf")
@@ -62,7 +62,7 @@ save_figure_pdf(effort_tradeoff_subset_plot, "output/figures/effort_tradeoffs_no
 effort_tradeoff_plot_lab <- ggplot(data = slider_lab_data, aes(x = sets_completed, y = mistake_rate)) +
   geom_point() +
   geom_smooth(method = "loess", linewidth = 1) +
-  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Counts") +
+  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Participants") +
   def_theme
 
 save_figure_pdf(effort_tradeoff_plot_lab, "output/figures/effort_tradeoffs_lab.pdf")
@@ -72,7 +72,7 @@ save_figure_pdf(effort_tradeoff_plot_lab, "output/figures/effort_tradeoffs_lab.p
 effort_tradeoff_plot_micro <- ggplot(data = slider_micro_data, aes(x = sets_completed, y = mistake_rate)) +
   geom_point() +
   geom_smooth(method = "loess", linewidth = 1) +
-  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Counts") +
+  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Participants") +
   def_theme
 
 save_figure_pdf(effort_tradeoff_plot_micro, "output/figures/effort_tradeoffs_micro.pdf")
@@ -82,7 +82,7 @@ save_figure_pdf(effort_tradeoff_plot_micro, "output/figures/effort_tradeoffs_mic
 effort_tradeoff_plot_macro <- ggplot(data = slider_macro_data, aes(x = sets_completed, y = mistake_rate)) +
   geom_point() +
   geom_smooth(method = "loess", linewidth = 1) +
-  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Counts") +
+  labs(x = "Sets completed", y = "Mistake rate (%)", size = "Participants") +
   def_theme
 
 save_figure_pdf(effort_tradeoff_plot_macro, "output/figures/effort_tradeoffs_macro.pdf")

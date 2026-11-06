@@ -36,14 +36,28 @@ slider_data <- slider_data %>%
   mutate(accuracy_target = if_else(recorded_mistake_rate <= 10, "Yes", "No"),
          accuracy_target = factor(accuracy_target, levels = c("No", "Yes")))
 
-## ----- Main text table options -----
+## ----- Table options -----
+
+# Row labels for all coefficients, and the blocks of rows shown under a heading in the full (appendix) tables
+
+coef_labels <- regression_coef_map(slider_data)
+
+full_groups <- regression_groups(slider_data)
+
+# Covariates in the specifications that control for them
+
+pooled_covariates <- c("gender", "race", "income", "edu", "econ", "occupation", "mouse")
 
 # Main text tables only report treatment effects, flagging which controls are included
 
-main_omit_coef <- "criterion|gender|race|income|edu|econ|occupation|mouse|demo_"
+main_coefs <- coef_labels[c("treatment2", "treatment3", "treatment4", "(Intercept)")]
 
 main_control_rows <- list("Baselines" = c("No", "No", "Yes", "Yes"),
                           "Covariates" = c("No", "Yes", "No", "Yes"))
+
+# Outcome of the accuracy target regressions, described in their table notes
+
+target_note <- "The outcome is meeting the accuracy target, that is, a recorded mistake rate of at most 10\\%."
 
 # ----- Regression (1): accuracy target achievement -----
 
@@ -61,23 +75,15 @@ reg_target_models <- list(reg_target_basic, reg_target_covariates, reg_target_ba
 
 ## ----- Create regression tables (main text and appendix) -----
 
-reg_target_tbl <- texreg(reg_target_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Log odds of achieving accuracy target" = 1:4),
-                         include.deviance = FALSE,
-                         omit.coef = main_omit_coef,
-                         custom.gof.rows = main_control_rows,
-                         table = FALSE)
+save_regression_tex(reg_target_models, "output/tables/reg_target.tex",
+                    outcome = "Log odds of meeting the accuracy target", coef_map = main_coefs,
+                    control_rows = main_control_rows,
+                    note = regression_note(reg_target_models, slider_data, "main", pooled_covariates, target_note))
 
-save_texreg_tex(reg_target_tbl, "output/tables/reg_target.tex")
-
-reg_target_full_tbl <- texreg(reg_target_models, digits = 2,
-                              stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                              custom.header = list("Log odds of achieving accuracy target" = 1:4),
-                              include.deviance = FALSE,
-                              table = FALSE)
-
-save_texreg_tex(reg_target_full_tbl, "output/tables/reg_target_full.tex")
+save_regression_tex(reg_target_models, "output/tables/reg_target_full.tex",
+                    outcome = "Log odds of meeting the accuracy target", coef_map = coef_labels,
+                    groups = full_groups, note_size = "",
+                    note = regression_note(reg_target_models, slider_data, "full", pooled_covariates, target_note))
 
 # ----- Regression (2): mistake rate -----
 
@@ -95,23 +101,15 @@ reg_mistakes_models <- list(reg_mistakes_basic, reg_mistakes_covariates, reg_mis
 
 ## ----- Create regression tables (main text and appendix) -----
 
-reg_mistakes_tbl <- texreg(reg_mistakes_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Mistake rate" = 1:4),
-                         include.deviance = FALSE,
-                         omit.coef = main_omit_coef,
-                         custom.gof.rows = main_control_rows,
-                         table = FALSE)
+save_regression_tex(reg_mistakes_models, "output/tables/reg_mistakes.tex",
+                    outcome = "Mistake rate (\\%)", coef_map = main_coefs,
+                    control_rows = main_control_rows,
+                    note = regression_note(reg_mistakes_models, slider_data, "main", pooled_covariates))
 
-save_texreg_tex(reg_mistakes_tbl, "output/tables/reg_mistakes.tex")
-
-reg_mistakes_full_tbl <- texreg(reg_mistakes_models, digits = 2,
-                                stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                                custom.header = list("Mistake rate" = 1:4),
-                                include.deviance = FALSE,
-                                table = FALSE)
-
-save_texreg_tex(reg_mistakes_full_tbl, "output/tables/reg_mistakes_full.tex")
+save_regression_tex(reg_mistakes_models, "output/tables/reg_mistakes_full.tex",
+                    outcome = "Mistake rate (\\%)", coef_map = coef_labels,
+                    groups = full_groups, note_size = "",
+                    note = regression_note(reg_mistakes_models, slider_data, "full", pooled_covariates))
 
 # ----- Regression (3): sets completed -----
 
@@ -129,23 +127,15 @@ reg_sets_models <- list(reg_sets_basic, reg_sets_covariates, reg_sets_baselines,
 
 ## ----- Create regression tables (main text and appendix) -----
 
-reg_sets_tbl <- texreg(reg_sets_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Sets completed" = 1:4),
-                         include.deviance = FALSE,
-                         omit.coef = main_omit_coef,
-                         custom.gof.rows = main_control_rows,
-                         table = FALSE)
+save_regression_tex(reg_sets_models, "output/tables/reg_sets.tex",
+                    outcome = "Sets completed", coef_map = main_coefs,
+                    control_rows = main_control_rows,
+                    note = regression_note(reg_sets_models, slider_data, "main", pooled_covariates))
 
-save_texreg_tex(reg_sets_tbl, "output/tables/reg_sets.tex")
-
-reg_sets_full_tbl <- texreg(reg_sets_models, digits = 2,
-                            stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                            custom.header = list("Sets completed" = 1:4),
-                            include.deviance = FALSE,
-                            table = FALSE)
-
-save_texreg_tex(reg_sets_full_tbl, "output/tables/reg_sets_full.tex")
+save_regression_tex(reg_sets_models, "output/tables/reg_sets_full.tex",
+                    outcome = "Sets completed", coef_map = coef_labels,
+                    groups = full_groups, note_size = "",
+                    note = regression_note(reg_sets_models, slider_data, "full", pooled_covariates))
 
 # ----- Tests of equality of treatment coefficients -----
 
@@ -195,7 +185,8 @@ slider_data <- slider_data %>%
 
 # Loss aversion tables keep the criterion and loss aversion terms
 
-la_omit_coef <- "gender|race|income|edu|econ|occupation|mouse|demo_"
+la_coefs <- coef_labels[c("treatment2", "treatment3", "treatment4", "criterionstrict",
+                          "lambda_i_adj", "treatment2_lambda_i_adj", "(Intercept)")]
 
 la_control_rows <- list("Baselines" = c("Yes", "Yes"),
                         "Covariates" = c("No", "Yes"))
@@ -211,16 +202,10 @@ reg_target_la_full <- glm(accuracy_target ~ treatment + criterion + lambda_i_adj
 
 reg_target_la_models <- list(reg_target_la_baselines, reg_target_la_full)
 
-reg_target_la_tbl <- texreg(reg_target_la_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Log odds of achieving accuracy target" = 1:2),
-                         custom.model.names = c("Model 3", "Model 4"),
-                         include.deviance = FALSE,
-                         omit.coef = la_omit_coef,
-                         custom.gof.rows = la_control_rows,
-                         table = FALSE)
-
-save_texreg_tex(reg_target_la_tbl, "output/tables/reg_target_la.tex")
+save_regression_tex(reg_target_la_models, "output/tables/reg_target_la.tex",
+                    outcome = "Log odds of meeting the accuracy target", coef_map = la_coefs,
+                    control_rows = la_control_rows,
+                    note = regression_note(reg_target_la_models, slider_data, "la", pooled_covariates, target_note))
 
 ## ----- Regression (5): mistake rate -----
 
@@ -230,16 +215,10 @@ reg_mistakes_la_full <- lm_robust(mistake_rate ~ treatment + criterion + lambda_
 
 reg_mistakes_la_models <- list(reg_mistakes_la_baselines, reg_mistakes_la_full)
 
-reg_mistakes_la_tbl <- texreg(reg_mistakes_la_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Mistake rate" = 1:2),
-                         custom.model.names = c("Model 3", "Model 4"),
-                         include.deviance = FALSE,
-                         omit.coef = la_omit_coef,
-                         custom.gof.rows = la_control_rows,
-                         table = FALSE)
-
-save_texreg_tex(reg_mistakes_la_tbl, "output/tables/reg_mistakes_la.tex")
+save_regression_tex(reg_mistakes_la_models, "output/tables/reg_mistakes_la.tex",
+                    outcome = "Mistake rate (\\%)", coef_map = la_coefs,
+                    control_rows = la_control_rows,
+                    note = regression_note(reg_mistakes_la_models, slider_data, "la", pooled_covariates))
 
 ## ----- Regression (6): sets completed -----
 
@@ -249,16 +228,10 @@ reg_sets_la_full <- lm_robust(sets_completed ~ treatment + criterion + lambda_i_
 
 reg_sets_la_models <- list(reg_sets_la_baselines, reg_sets_la_full)
 
-reg_sets_la_tbl <- texreg(reg_sets_la_models, digits = 2,
-                         stars = c(0.001, 0.01, 0.05), include.ci = FALSE,
-                         custom.header = list("Sets completed" = 1:2),
-                         custom.model.names = c("Model 3", "Model 4"),
-                         include.deviance = FALSE,
-                         omit.coef = la_omit_coef,
-                         custom.gof.rows = la_control_rows,
-                         table = FALSE)
-
-save_texreg_tex(reg_sets_la_tbl, "output/tables/reg_sets_la.tex")
+save_regression_tex(reg_sets_la_models, "output/tables/reg_sets_la.tex",
+                    outcome = "Sets completed", coef_map = la_coefs,
+                    control_rows = la_control_rows,
+                    note = regression_note(reg_sets_la_models, slider_data, "la", pooled_covariates))
 
 ## ----- Loss aversion sense checks -----
 
@@ -282,6 +255,11 @@ write_tex_macros(c(
   # Mean sets completed in the control
 
   list(ControlMeanSets = round(mean(slider_data$sets_completed[slider_data$treatment == 1]), 2)),
+
+  # Adjusted R-squared of the sets completed regressions without controls and with baselines (no longer in the tables)
+
+  list(AdjRsqSetsNoControls = sprintf("%.2f", reg_sets_basic$adj.r.squared),
+       AdjRsqSetsBaselines = sprintf("%.2f", reg_sets_baselines$adj.r.squared)),
 
   # Treatment 2 vs 3 coefficient tests (e.g. CoefTestPooledAccuracyTargetModelThreePval)
 

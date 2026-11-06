@@ -1,6 +1,6 @@
 # Sample descriptive statistics: sample sizes, covariate balance tables and joint balance tests,
 # slider task performance summary tables, and tests of performance differences between subsamples
-# Outputs: output/tables/covariates_sumstats_*.tex, output/tables/performance_sumstats_*.tex,
+# Outputs: output/tables/covariates_sumstats_*.tex, output/tables/performance_sumstats*.tex,
 #          output/numbers/descriptive_numbers.tex (numbers cited in the text),
 #          results/numbers_in_paper/balance_tests.csv, results/numbers_in_paper/subsample_performance_tests.csv
 
@@ -33,216 +33,96 @@ sample_sizes <- list(NumObs = nrow(slider_data),
 
 # ----- Covariate balance tables -----
 
+## ----- Table helpers -----
+
+# Covariates in each sample (education, economics studies and occupation are constant in the class samples)
+
+covariates_all <- c("gender", "race", "age", "income", "edu", "econ", "occupation", "mouse")
+
+covariates_class <- c("gender", "race", "age", "income", "mouse")
+
+# Summary of covariates by treatment group: proportions for categories, mean (SD) for age
+
+covariate_summary <- function(data, vars) {
+  data %>%
+    relabel_covariates() %>%
+    select(treatment, all_of(vars)) %>%
+    tbl_summary(
+      by = treatment,
+      missing = "no",
+      type = where(is.numeric) ~ "continuous",
+      label = as.list(covariate_names[vars]),
+      statistic = list(all_continuous() ~ "{mean} ({sd})",
+                       all_categorical() ~ "{p}"),
+      digits = list(all_continuous() ~ 1,
+                    all_categorical() ~ list(p = label_style_number(digits = 2))))
+}
+
+# Balance table: covariate summaries for all participants and each group, with p-values of tests of differences between
+# groups from (a) Fisher's exact (simulated) and Kruskal-Wallis tests and (b) chi-square and Welch's one-way F tests
+
+covariate_table <- function(data, vars, seed) {
+
+  # Fisher's exact test version (simulated p-values, so the seed is set first)
+
+  set.seed(seed)
+
+  exact <- covariate_summary(data, vars) %>%
+    add_overall(last = FALSE) %>%
+    add_p(list(all_continuous() ~ "kruskal.test", all_categorical() ~ "fisher.test"),
+          test.args = all_categorical() ~ list(simulate.p.value = TRUE, B = 10000),
+          pvalue_fun = label_style_pvalue(digits = 2)) %>%
+    add_significance_stars(thresholds = star_levels)
+
+  # Chi square test version
+
+  asymptotic <- covariate_summary(data, vars) %>%
+    add_p(list(all_continuous() ~ "oneway.test", all_categorical() ~ "chisq.test"),
+          pvalue_fun = label_style_pvalue(digits = 2)) %>%
+    add_significance_stars(thresholds = star_levels) %>%
+    modify_column_hide(columns = c(label, starts_with("stat_")))
+
+  # Table note
+
+  yes_no <- str_to_lower(covariate_names[intersect(c("econ", "mouse"), vars)])
+
+  note <- str_c("Each cell is the proportion of participants in the category, among those who answered the question ",
+                "(for ", prose_list(yes_no), ", the proportion answering yes), except for age, which is the mean with ",
+                "the standard deviation in parentheses. The p-values test for differences between the four treatment ",
+                "groups, using (a) Fisher's exact test, simulated with 10,000 replicates, and the Kruskal--Wallis test ",
+                "for age, and (b) Pearson's CHISQUARED test and Welch's one-way F test for age. ",
+                "*** p < 0.01, ** p < 0.05, * p < 0.1.")
+
+  # Combine the tables
+
+  tbl_merge(list(exact, asymptotic), tab_spanner = FALSE) %>%
+    add_n_row(data, suffix = "_1") %>%
+    modify_header(label = "", stat_0_1 = "All",
+                  stat_1_1 = treatment_names[["1"]], stat_2_1 = treatment_names[["2"]],
+                  stat_3_1 = treatment_names[["3"]], stat_4_1 = treatment_names[["4"]],
+                  p.value_1 = "(a)", p.value_2 = "(b)") %>%
+    modify_spanning_header(c(stat_1_1, stat_2_1, stat_3_1, stat_4_1) ~ "Treatment group",
+                           c(p.value_1, p.value_2) ~ "p-value") %>%
+    finish_gt(note) %>%
+    cols_width(label ~ px(170), starts_with("p.value") ~ px(56)) %>%
+    tab_options(table.font.size = 12)
+}
+
 ## ----- Lab sample -----
 
-# Fisher's exact test version
-
-set.seed(1)
-
-lab_covariate_sumstats <- slider_lab_data %>%
-  select(treatment, gender, race, age, income, edu, econ, occupation, mouse) %>%
-  rename("household income" = income, "education level" = edu,
-         "studied economics" = econ, "used mouse" = mouse) %>%
-  rename_with(str_to_title) %>%
-  tbl_summary(
-    missing = "no",
-    by = Treatment,
-    type = where(is.numeric) ~ "continuous",
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)")
-      ) %>%
-      modify_header(label ~ "**Metric**", stat_1 ~ "**1**", stat_2 ~ "**2**", stat_3 ~ "**3**", stat_4 ~ "**4**") %>%
-  modify_spanning_header(all_stat_cols() ~ "**Treatments**") %>%
-  add_overall(col_label = "**All**") %>%
-  bold_labels() %>%
-  add_p(list(all_continuous() ~ "kruskal.test", all_categorical() ~ "fisher.test"),
-        test.args = all_categorical() ~ list(simulate.p.value = TRUE, B = 10000)) %>%
-  add_significance_stars()
-
-# Chi square test version
-
-lab_covariate_sumstats_alt <- slider_lab_data %>%
-  select(treatment, gender, race, age, income, edu, econ, occupation, mouse) %>%
-  rename("household income" = income, "education level" = edu,
-         "studied economics" = econ, "used mouse" = mouse) %>%
-  rename_with(str_to_title) %>%
-  tbl_summary(
-    missing = "no",
-    by = Treatment,
-    type = where(is.numeric) ~ "continuous",
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)")
-      ) %>%
-  add_p(list(all_continuous() ~ "oneway.test", all_categorical() ~ "chisq.test")) %>%
-  add_significance_stars() %>%
-  modify_column_hide(columns = c("label", "stat_1", "stat_2", "stat_3", "stat_4"))
-
-# Combine the tables
-
-lab_covariate_sumstats <- tbl_merge(list(lab_covariate_sumstats, lab_covariate_sumstats_alt), tab_spanner = FALSE) %>%
-  as_gt() %>%
-  cols_width("label" ~ px(175), starts_with("p") ~ px(50)) %>%
-  tab_options(table.font.size = 12)
-
-save_gt_tex(lab_covariate_sumstats, "output/tables/covariates_sumstats_lab.tex")
+save_gt_tex(covariate_table(slider_lab_data, covariates_all, seed = 1), "output/tables/covariates_sumstats_lab.tex")
 
 ## ----- Micro sample -----
 
-# Fisher's exact test version
-
-set.seed(2)
-
-micro_covariate_sumstats <- slider_micro_data %>%
-  select(treatment, gender, race, age, income, mouse) %>%
-  rename("household income" = income, "used mouse" = mouse) %>%
-  rename_with(str_to_title) %>%
-  tbl_summary(
-    missing = "no",
-    by = Treatment,
-    type = where(is.numeric) ~ "continuous",
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)")
-      ) %>%
-      modify_header(label ~ "**Metric**", stat_1 ~ "**1**", stat_2 ~ "**2**", stat_3 ~ "**3**", stat_4 ~ "**4**") %>%
-  modify_spanning_header(all_stat_cols() ~ "**Treatments**") %>%
-  add_overall(col_label = "**All**") %>%
-  bold_labels() %>%
-  add_p(list(all_continuous() ~ "kruskal.test", all_categorical() ~ "fisher.test"),
-        test.args = all_categorical() ~ list(simulate.p.value = TRUE, B = 10000)) %>%
-  add_significance_stars()
-
-# Chi square test version
-
-micro_covariate_sumstats_alt <- slider_micro_data %>%
-  select(treatment, gender, race, age, income, mouse) %>%
-  rename("household income" = income, "used mouse" = mouse) %>%
-  rename_with(str_to_title) %>%
-  tbl_summary(
-    missing = "no",
-    by = Treatment,
-    type = where(is.numeric) ~ "continuous",
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)")
-      ) %>%
-  add_p(list(all_continuous() ~ "oneway.test", all_categorical() ~ "chisq.test")) %>%
-  add_significance_stars() %>%
-  modify_column_hide(columns = c("label", "stat_1", "stat_2", "stat_3", "stat_4"))
-
-# Combine the tables
-
-micro_covariate_sumstats <- tbl_merge(list(micro_covariate_sumstats, micro_covariate_sumstats_alt), tab_spanner = FALSE) %>%
-  as_gt() %>%
-  cols_width("label" ~ px(175), starts_with("stat") ~ px(75),
-             starts_with("p") ~ px(50)) %>%
-  tab_options(table.font.size = 12)
-
-save_gt_tex(micro_covariate_sumstats, "output/tables/covariates_sumstats_micro.tex")
+save_gt_tex(covariate_table(slider_micro_data, covariates_class, seed = 2), "output/tables/covariates_sumstats_micro.tex")
 
 ## ----- Macro sample -----
 
-# Fisher's exact test version
-
-set.seed(3)
-
-macro_covariate_sumstats <- slider_macro_data %>%
-  select(treatment, gender, race, age, income, mouse) %>%
-  rename("household income" = income, "used mouse" = mouse) %>%
-  rename_with(str_to_title) %>%
-  tbl_summary(
-    missing = "no",
-    by = Treatment,
-    type = where(is.numeric) ~ "continuous",
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)")
-      ) %>%
-      modify_header(label ~ "**Metric**", stat_1 ~ "**1**", stat_2 ~ "**2**", stat_3 ~ "**3**", stat_4 ~ "**4**") %>%
-  modify_spanning_header(all_stat_cols() ~ "**Treatments**") %>%
-  add_overall(col_label = "**All**") %>%
-  bold_labels() %>%
-  add_p(list(all_continuous() ~ "kruskal.test", all_categorical() ~ "fisher.test"),
-        test.args = all_categorical() ~ list(simulate.p.value = TRUE, B = 10000)) %>%
-  add_significance_stars()
-
-# Chi square test version
-
-macro_covariate_sumstats_alt <- slider_macro_data %>%
-  select(treatment, gender, race, age, income, mouse) %>%
-  rename("household income" = income, "used mouse" = mouse) %>%
-  rename_with(str_to_title) %>%
-  tbl_summary(
-    missing = "no",
-    by = Treatment,
-    type = where(is.numeric) ~ "continuous",
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)")
-      ) %>%
-  add_p(list(all_continuous() ~ "oneway.test", all_categorical() ~ "chisq.test")) %>%
-  add_significance_stars() %>%
-  modify_column_hide(columns = c("label", "stat_1", "stat_2", "stat_3", "stat_4"))
-
-# Combine the tables
-
-macro_covariate_sumstats <- tbl_merge(list(macro_covariate_sumstats, macro_covariate_sumstats_alt), tab_spanner = FALSE) %>%
-  as_gt() %>%
-  cols_width("label" ~ px(175), starts_with("stat") ~ px(75),
-             starts_with("p") ~ px(50)) %>%
-  tab_options(table.font.size = 12)
-
-save_gt_tex(macro_covariate_sumstats, "output/tables/covariates_sumstats_macro.tex")
+save_gt_tex(covariate_table(slider_macro_data, covariates_class, seed = 3), "output/tables/covariates_sumstats_macro.tex")
 
 ## ----- Pooled sample -----
 
-# Fisher's exact test version
-
-set.seed(4)
-
-pooled_covariate_sumstats <- slider_data %>%
-  select(treatment, gender, race, age, income, edu, econ, occupation, mouse) %>%
-  rename("household income" = income, "education level" = edu,
-         "studied economics" = econ, "used mouse" = mouse) %>%
-  rename_with(str_to_title) %>%
-  tbl_summary(
-    missing = "no",
-    by = Treatment,
-    type = where(is.numeric) ~ "continuous",
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)")
-      ) %>%
-      modify_header(label ~ "**Metric**", stat_1 ~ "**1**", stat_2 ~ "**2**", stat_3 ~ "**3**", stat_4 ~ "**4**") %>%
-  modify_spanning_header(all_stat_cols() ~ "**Treatments**") %>%
-  add_overall(col_label = "**All**") %>%
-  bold_labels() %>%
-  add_p(list(all_continuous() ~ "kruskal.test", all_categorical() ~ "fisher.test"),
-        test.args = all_categorical() ~ list(simulate.p.value = TRUE, B = 10000)) %>%
-  add_significance_stars()
-
-# Chi square test version
-
-pooled_covariate_sumstats_alt <- slider_data %>%
-  select(treatment, gender, race, age, income, edu, econ, occupation, mouse) %>%
-  rename("household income" = income, "education level" = edu,
-         "studied economics" = econ, "used mouse" = mouse) %>%
-  rename_with(str_to_title) %>%
-  tbl_summary(
-    missing = "no",
-    by = Treatment,
-    type = where(is.numeric) ~ "continuous",
-    statistic = list(all_continuous() ~ "{mean} ({sd})",
-                     all_categorical() ~ "{n} ({p}%)")
-      ) %>%
-  add_p(list(all_continuous() ~ "oneway.test", all_categorical() ~ "chisq.test")) %>%
-  add_significance_stars() %>%
-  modify_column_hide(columns = c("label", "stat_1", "stat_2", "stat_3", "stat_4"))
-
-# Combine the tables
-
-pooled_covariate_sumstats <-
-  tbl_merge(list(pooled_covariate_sumstats, pooled_covariate_sumstats_alt), tab_spanner = FALSE) %>%
-  as_gt() %>%
-  cols_width("label" ~ px(175), starts_with("p") ~ px(50)) %>%
-  tab_options(table.font.size = 12)
-
-save_gt_tex(pooled_covariate_sumstats, "output/tables/covariates_sumstats_pooled.tex")
+save_gt_tex(covariate_table(slider_data, covariates_all, seed = 4), "output/tables/covariates_sumstats_pooled.tex")
 
 # ----- Joint tests of covariate balance -----
 
@@ -305,82 +185,58 @@ write_csv(balance_tests, "results/numbers_in_paper/balance_tests.csv")
 
 # ----- Slider task performance summary tables -----
 
-## ----- Lab sample -----
+## ----- Table helpers -----
 
-lab_slider_performance_sumstats <- slider_lab_data %>%
-  select(treatment, sets_attempted, sets_completed, mistake_rate) %>%
+# Mean (SD) of slider task performance for all participants and each treatment group, with the number of participants
+
+performance_summary <- function(data, sample_name = NULL) {
+  tbl <- data %>%
+    select(treatment, sets_attempted, sets_completed, mistake_rate) %>%
     tbl_summary(
-        by = treatment,
-        missing = "no",
-        type = where(is.numeric) ~ "continuous",
-        statistic = list(all_continuous() ~ "{mean} ({sd})",
-                         all_categorical() ~ "{n} ({p}%)"),
-        label = c(sets_attempted ~ "Sets attempted",
-                  sets_completed ~ "Sets completed",
-                  mistake_rate ~ "Mistake rate (%)")
-      ) %>%
-  add_overall(col_label = "**All**") %>%
-      modify_header(label ~ "**Metric**", stat_1 ~ "**Treatment 1**", stat_2 ~ "**Treatment 2**", stat_3 ~ "**Treatment 3**", stat_4 ~ "**Treatment 4**") %>%
-  modify_spanning_header(all_stat_cols() ~ "**RFCDR Lab**")
+      by = treatment,
+      missing = "no",
+      type = where(is.numeric) ~ "continuous",
+      statistic = all_continuous() ~ "{mean} ({sd})",
+      digits = all_continuous() ~ 1,
+      label = list(sets_attempted ~ "Sets attempted",
+                   sets_completed ~ "Sets completed",
+                   mistake_rate ~ "Mistake rate (%)")) %>%
+    add_overall(last = FALSE) %>%
+    add_n_row(data) %>%
+    modify_header(label = "", stat_0 = "All",
+                  stat_1 = treatment_names[["1"]], stat_2 = treatment_names[["2"]],
+                  stat_3 = treatment_names[["3"]], stat_4 = treatment_names[["4"]])
+  if (!is.null(sample_name)) tbl <- modify_spanning_header(tbl, all_stat_cols() ~ sample_name)
+  tbl
+}
 
-save_gt_tex(as_gt(lab_slider_performance_sumstats), "output/tables/performance_sumstats_lab.tex")
+performance_note <- "Each cell is the mean, with the standard deviation in parentheses."
 
-## ----- Microecon class sample -----
+save_performance_tex <- function(tbl, file, note = performance_note) {
+  tbl %>%
+    finish_gt(note) %>%
+    cols_width(label ~ px(120)) %>%
+    tab_options(table.font.size = 14) %>%
+    save_gt_tex(file)
+}
 
-micro_slider_performance_sumstats <- slider_micro_data %>%
-  select(treatment, sets_attempted, sets_completed, mistake_rate) %>%
-    tbl_summary(
-        by = treatment,
-        type = where(is.numeric) ~ "continuous",
-        statistic = list(all_continuous() ~ "{mean} ({sd})",
-                         all_categorical() ~ "{n} ({p}%)"),
-        label = c(sets_attempted ~ "Sets attempted",
-                  sets_completed ~ "Sets completed",
-                  mistake_rate ~ "Mistake rate (%)")
-      ) %>%
-  add_overall(col_label = "**All**") %>%
-      modify_header(label ~ "**Metric**", stat_1 ~ "**Treatment 1**", stat_2 ~ "**Treatment 2**", stat_3 ~ "**Treatment 3**", stat_4 ~ "**Treatment 4**") %>%
-    modify_spanning_header(all_stat_cols() ~ "**Microeconomics Class**")
+## ----- Each sample (stacked in one float in the manuscripts) -----
 
-save_gt_tex(as_gt(micro_slider_performance_sumstats), "output/tables/performance_sumstats_micro.tex")
+save_performance_tex(performance_summary(slider_data, "Pooled"), "output/tables/performance_sumstats_pooled.tex")
 
-## ----- Macroecon class sample -----
+save_performance_tex(performance_summary(slider_lab_data, "RFCDR lab"), "output/tables/performance_sumstats_lab.tex")
 
-macro_slider_performance_sumstats <- slider_macro_data %>%
-  select(treatment, sets_attempted, sets_completed, mistake_rate) %>%
-    tbl_summary(
-        by = treatment,
-        type = where(is.numeric) ~ "continuous",
-        statistic = list(all_continuous() ~ "{mean} ({sd})",
-                         all_categorical() ~ "{n} ({p}%)"),
-        label = c(sets_attempted ~ "Sets attempted",
-                  sets_completed ~ "Sets completed",
-                  mistake_rate ~ "Mistake rate (%)")
-      ) %>%
-  add_overall(col_label = "**All**") %>%
-      modify_header(label ~ "**Metric**", stat_1 ~ "**Treatment 1**", stat_2 ~ "**Treatment 2**", stat_3 ~ "**Treatment 3**", stat_4 ~ "**Treatment 4**") %>%
-    modify_spanning_header(all_stat_cols() ~ "**Macroeconomics Class**")
+save_performance_tex(performance_summary(slider_micro_data, "Microeconomics class"), "output/tables/performance_sumstats_micro.tex")
 
-save_gt_tex(as_gt(macro_slider_performance_sumstats), "output/tables/performance_sumstats_macro.tex")
+save_performance_tex(performance_summary(slider_macro_data, "Macroeconomics class"), "output/tables/performance_sumstats_macro.tex")
 
-## ----- Pooled sample -----
+## ----- All samples in one table, with a panel for each sample -----
 
-slider_performance_sumstats <- slider_data %>%
-  select(treatment, sets_attempted, sets_completed, mistake_rate) %>%
-    tbl_summary(
-        by = treatment,
-        type = where(is.numeric) ~ "continuous",
-        statistic = list(all_continuous() ~ "{mean} ({sd})",
-                         all_categorical() ~ "{n} ({p}%)"),
-        label = c(sets_attempted ~ "Sets attempted",
-                  sets_completed ~ "Sets completed",
-                  mistake_rate ~ "Mistake rate (%)")
-      ) %>%
-  add_overall(col_label = "**All**") %>%
-      modify_header(label ~ "**Metric**", stat_1 ~ "**Treatment 1**", stat_2 ~ "**Treatment 2**", stat_3 ~ "**Treatment 3**", stat_4 ~ "**Treatment 4**") %>%
-    modify_spanning_header(all_stat_cols() ~ "**Pooled**")
-
-save_gt_tex(as_gt(slider_performance_sumstats), "output/tables/performance_sumstats_pooled.tex")
+tbl_stack(list(performance_summary(slider_data), performance_summary(slider_lab_data),
+               performance_summary(slider_micro_data), performance_summary(slider_macro_data)),
+          group_header = c("Pooled", "RFCDR lab", "Microeconomics class", "Macroeconomics class")) %>%
+  save_performance_tex("output/tables/performance_sumstats.tex",
+                       note = str_c(performance_note, " The pooled sample combines the RFCDR lab and both class samples."))
 
 # ----- Tests of performance differences between subsamples -----
 

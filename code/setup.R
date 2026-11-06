@@ -39,6 +39,47 @@ def_theme <- theme(plot.title = element_text(family = "serif", size = 13, hjust 
                   legend.title = element_text(family = "serif", size = 12),
                   legend.text = element_text(family = "serif", size = 11))
 
+# ----- Labels for tables and figures -----
+
+## ----- Treatment groups -----
+
+# Names of treatments 1-4 as defined in the manuscript (\CtrlName, \LPName, \SPName and \LNName in manuscript_megan_edits.tex)
+
+treatment_names <- c("1" = "Control", "2" = "Lenient with Plan", "3" = "Strict with Plan", "4" = "Lenient without Plan")
+
+## ----- Covariates -----
+
+covariate_names <- c(gender = "Gender", race = "Race", age = "Age", income = "Household income",
+                     edu = "Education", econ = "Studied economics", occupation = "Occupation", mouse = "Used mouse")
+
+# Clearer names for some covariate categories ("--" is an en dash in LaTeX; gt escapes the dollar signs, and
+# latex_dollars() escapes them for texreg tables and notes)
+
+covariate_level_names <- list(
+  income = c("0 - 24,999" = "$0--24,999", "25,000 - 49,999" = "$25,000--49,999", "50,000 - 74,999" = "$50,000--74,999",
+             "75,000 - 119,999" = "$75,000--119,999", "120,000 - 199,999" = "$120,000--199,999",
+             "200,000 and over" = "$200,000 and over"),
+  occupation = c("High-tech mfg or eng" = "High-tech manufacturing or engineering"))
+
+latex_dollars <- function(x) str_replace_all(x, fixed("$"), "\\$")
+
+# Rename covariate categories for display (levels keep their order, so tests and regressions are unchanged)
+
+relabel_covariates <- function(data) {
+  for (var in intersect(names(covariate_level_names), names(data))) {
+    lookup <- covariate_level_names[[var]]
+    lvls <- levels(data[[var]])
+    levels(data[[var]]) <- if_else(lvls %in% names(lookup), unname(lookup[lvls]), lvls)
+  }
+  data
+}
+
+## ----- Significance stars (used in every table) -----
+
+star_levels <- c(0.01, 0.05, 0.1)
+
+star_note <- "$^{***}p<0.01$, $^{**}p<0.05$, $^{*}p<0.1$."
+
 # ----- Output folders read by the LaTeX manuscript -----
 
 dir.create("output/tables", recursive = TRUE, showWarnings = FALSE)
@@ -53,26 +94,200 @@ dir.create("results/numbers_in_paper", recursive = TRUE, showWarnings = FALSE)
 
 # ----- Helper functions for exporting output -----
 
+## ----- Writing files -----
+
+# Run a function that writes a file, retrying for a few seconds if the file is locked (backup or antivirus software
+# can briefly hold an output file open just after it is written)
+
+write_with_retry <- function(write_fn, tries = 10) {
+  for (i in seq_len(tries)) {
+    result <- tryCatch({
+      write_fn()
+      NULL
+    }, error = function(e) e)
+    if (is.null(result)) return(invisible(NULL))
+    if (i == tries) stop(result)
+    Sys.sleep(0.5)
+  }
+}
+
 ## ----- Tables -----
 
-# Save a gt table as LaTeX, dropping gt's table environment since the manuscript supplies the float, caption and label
+### ----- Descriptive tables (gtsummary/gt) -----
+
+# Plain-text placeholders in gt table text, swapped for LaTeX when saving (gt escapes LaTeX commands)
+
+gt_latex_tokens <- c("NOTESLABEL" = "\\\\textit{Notes:}", "CHISQUARED" = "$\\\\chi^2$")
+
+# Column headers for the treatment groups, broken over two lines so that wide tables fit the page
+
+treatment_headers <- c("Lenient with Plan" = "Lenient\\\\\\\\with Plan", "Strict with Plan" = "Strict\\\\\\\\with Plan",
+                       "Lenient without Plan" = "Lenient\\\\\\\\without Plan")
+
+# Add a final row with the number of participants in each column (all participants, then each treatment group)
+
+add_n_row <- function(tbl, data, suffix = "") {
+  counts <- c(nrow(data), as.vector(table(data$treatment)))
+  n_row <- tibble(variable = "n_obs", row_type = "label", label = "Observations",
+                  !!!set_names(as.list(as.character(counts)), str_c("stat_", 0:4, suffix)))
+  modify_table_body(tbl, ~ bind_rows(.x, n_row))
+}
+
+# Convert a gtsummary table to gt, replacing gtsummary's footnotes with a single table note
+
+finish_gt <- function(tbl, note) {
+  tbl %>%
+    as_gt() %>%
+    rm_footnotes() %>%
+    rm_source_notes() %>%
+    tab_source_note(str_c("NOTESLABEL ", note))
+}
+
+# Save a gt table as LaTeX, dropping gt's table environment since the manuscript supplies the float, caption and label.
+# Also indents category rows with \quad instead of gtsummary's non-breaking spaces, breaks the treatment group headers over two
+# lines, and adds a rule above the observations row. In tables with panels (row groups), the panel headings are set in
+# italics below a single rule instead
 
 save_gt_tex <- function(gt_table, file) {
-  gt_table %>%
+  group_heading <- "\\\\midrule\\\\addlinespace\\[2.5pt\\]\n\\\\multicolumn\\{(\\d+)\\}\\{l\\}\\{([^}]*)\\} \\\\\\\\\\[2.5pt\\] \n\\\\midrule\\\\addlinespace\\[2.5pt\\]\n"
+  tex <- gt_table %>%
     as_latex() %>%
     as.character() %>%
     str_remove("^\\s*\\\\begin\\{table\\}(\\[[^\\]]*\\])?\\s*") %>%
     str_remove("\\s*\\\\end\\{table\\}\\s*$") %>%
-    write_lines(file)
+    str_replace_all(gt_latex_tokens) %>%
+    str_replace_all("(?m)^[ \\u00a0]{4}(?=\\S)", "\\\\quad ") %>% #gtsummary indents with non-breaking spaces
+    str_replace(fixed(">{\\raggedright\\arraybackslash}p{"),
+                fixed(">{\\raggedright\\arraybackslash\\hangindent=2em}p{")) %>% #indent wrapped row labels
+    str_replace("\\\\\\\\\n\\\\end\\{minipage\\}", "\n\\\\end{minipage}") #line break after the note
+  header_end <- str_locate(tex, fixed("\\midrule"))[1, "start"]
+  header <- str_sub(tex, 1, header_end - 1) %>%
+    str_replace_all(map_chr(treatment_headers, ~ str_c("\\\\begin{tabular}[b]{@{}c@{}}", .x, "\\\\end{tabular}")))
+  tex <- str_c(header, str_sub(tex, header_end))
+  tex <- if (str_detect(tex, group_heading)) {
+    str_replace_all(tex, group_heading, "\\\\midrule\n\\\\multicolumn{\\1}{l}{\\\\textit{\\2}} \\\\\\\\\n")
+  } else {
+    str_replace(tex, "\n(Observations &)", "\n\\\\midrule\n\\1")
+  }
+  write_with_retry(function() write_lines(tex, file))
 }
 
-# Save a texreg table (made with table = FALSE) as LaTeX, adding a rule below the rows flagging which controls are included
+### ----- Regression tables (texreg) -----
 
-save_texreg_tex <- function(texreg_table, file) {
-  texreg_table %>%
+# Row labels for regression coefficients, in display order, for models estimated on data (after any releveling)
+
+regression_coef_map <- function(data) {
+  level_coefs <- function(var) {
+    lvls <- levels(data[[var]])[-1]
+    display <- covariate_level_names[[var]] %||% character()
+    set_names(latex_dollars(if_else(lvls %in% names(display), unname(display[lvls]), lvls)), str_c(var, lvls))
+  }
+  c(set_names(treatment_names[-1], str_c("treatment", names(treatment_names)[-1])),
+    "criterionstrict" = "Strict criterion",
+    "lambda_i_adj" = "Loss aversion ($\\lambda_i$)",
+    "treatment2_lambda_i_adj" = str_c(treatment_names[["2"]], " $\\times$ loss aversion"),
+    "demo_sets_attempted" = "Sets attempted", "demo_sets_completed" = "Sets completed", "demo_mistakes" = "Mistakes",
+    level_coefs("gender"), level_coefs("race"), level_coefs("income"), level_coefs("edu"),
+    "econYes" = "Studied economics",
+    level_coefs("occupation"),
+    "mouseYes" = "Used mouse",
+    "(Intercept)" = "Constant")
+}
+
+# Blocks of rows shown under a heading in the full regression tables
+
+regression_groups <- function(data) {
+  list("Baseline performance (demo task)" = c("demo_sets_attempted", "demo_sets_completed", "demo_mistakes"),
+       "Gender" = str_c("gender", levels(data$gender)[-1]),
+       "Race" = str_c("race", levels(data$race)[-1]),
+       "Household income" = str_c("income", levels(data$income)[-1]),
+       "Education" = str_c("edu", levels(data$edu)[-1]),
+       "Occupation" = str_c("occupation", levels(data$occupation)[-1]))
+}
+
+# Describe a list of items in prose ("a, b and c")
+
+prose_list <- function(items) {
+  if (length(items) == 1) items else str_c(str_c(head(items, -1), collapse = ", "), " and ", last(items))
+}
+
+# Table note for a regression table. type is "main" (treatment effects only), "full" (all coefficients) or
+# "la" (loss aversion interaction); covariates are the covariates in the specifications that control for them
+
+regression_note <- function(models, data, type, covariates, outcome_note = NULL) {
+  covariate_prose <- c(gender = "gender", race = "race", income = "household income", edu = "education",
+                       econ = "economics studies", occupation = "occupation", mouse = "mouse use")
+  estimator <- if (inherits(models[[1]], "glm")) {
+    "Logit estimates, with standard errors in parentheses."
+  } else {
+    str_c("OLS estimates, with heteroskedasticity-robust (", models[[1]]$se_type, ") standard errors in parentheses.")
+  }
+  controls <- switch(type,
+    main = str_c("All specifications control for whether the strict criterion was applied. Baselines are sets attempted, ",
+                 "sets completed and mistakes in the demo task; covariates are ", prose_list(covariate_prose[covariates]),
+                 ". Specifications with covariates use the participants who answered all covariate questions."),
+    full = {
+      factors <- intersect(c("gender", "race", "income", "edu", "occupation"), covariates)
+      omitted <- map_chr(factors, function(var) {
+        ref <- levels(data[[var]])[1]
+        display <- covariate_level_names[[var]]
+        str_c(covariate_prose[[var]], " (", latex_dollars(if (ref %in% names(display)) display[[ref]] else ref), ")")
+      })
+      str_c("Omitted categories are the lenient criterion and, for covariates, ", prose_list(omitted),
+            ". Specifications with covariates use the participants who answered all covariate questions.")
+    },
+    la = str_c("Loss aversion is the participant's estimated $\\lambda_i$, top-coded at 4.33 and bottom-coded at 0. ",
+               "Both specifications control for baseline performance in the demo task (sets attempted, sets completed ",
+               "and mistakes); column (2) also controls for ", prose_list(covariate_prose[covariates]),
+               ". The sample is the participants whose loss aversion could be estimated and, in column (2), who answered ",
+               "all covariate questions."))
+  nan_columns <- which(map_lgl(models, ~ any(is.nan(sqrt(diag(vcov(.x)))))))
+  nan_note <- if (length(nan_columns) > 0) {
+    str_c("Standard errors in column", if (length(nan_columns) > 1) "s" else "", " ",
+          prose_list(str_c("(", nan_columns, ")")), " cannot be computed.")
+  }
+  str_c(c(estimator, outcome_note, str_c("The omitted group is ", treatment_names[["1"]], "."),
+          controls, nan_note, star_note), collapse = " ")
+}
+
+# Save a regression table as LaTeX: columns numbered (1), (2), ..., labelled rows, the number of observations as the
+# only fit statistic, and the note set below the table at the table's width. coef_map lists the rows to show, in order;
+# control_rows flags which controls each column includes; note_size is the font size of the note (empty to keep the
+# surrounding size)
+
+save_regression_tex <- function(models, file, outcome, coef_map, note, groups = list(), control_rows = NULL,
+                                note_size = "\\footnotesize") {
+  present <- unique(unlist(map(models, ~ names(coef(.x)))))
+  coef_map <- coef_map[names(coef_map) %in% present]
+  group_rows <- groups %>%
+    map(~ which(names(coef_map) %in% .x)) %>%
+    discard(~ length(.x) == 0)
+  tabular <- texreg(models, digits = 2, stars = star_levels, include.ci = FALSE,
+                    custom.header = set_names(list(seq_along(models)), outcome),
+                    custom.model.names = str_c("(", seq_along(models), ")"),
+                    custom.coef.map = as.list(coef_map),
+                    groups = if (length(group_rows) > 0) group_rows else NULL,
+                    custom.gof.rows = control_rows,
+                    include.aic = FALSE, include.bic = FALSE, include.loglik = FALSE, include.deviance = FALSE,
+                    include.rsquared = FALSE, include.adjrs = FALSE, include.rmse = FALSE,
+                    booktabs = TRUE, use.packages = FALSE, custom.note = "", table = FALSE) %>%
     as.character() %>%
-    str_replace("(\nCovariates[^\n]*\n)", "\\1\\\\hline\n") %>%
-    write_lines(file)
+    str_remove_all("(?m)^[ \\t]*(&[ \\t]*)+\\\\\\\\[ \\t]*\\n") %>% #empty rows that texreg adds below group headings
+    str_replace_all(fixed("$$"), "") %>% #standard errors that cannot be computed
+    str_replace(fixed("Num. obs."), "Observations") %>%
+    str_trim()
+  tex <- c("% Generated by the R scripts in code/; the note is set at the width of the table",
+           "\\ifdefined\\regtablebox\\else\\newsavebox{\\regtablebox}\\fi",
+           "\\sbox{\\regtablebox}{%",
+           tabular,
+           "}%",
+           "\\begin{minipage}{\\wd\\regtablebox}",
+           "\\usebox{\\regtablebox}",
+           "",
+           "\\smallskip",
+           str_c("{", note_size, "\\raggedright\\textit{Notes:} ", note, "\\par}"),
+           "\\end{minipage}")
+  write_with_retry(function() write_lines(tex, file))
 }
 
 ## ----- Figures -----
@@ -80,7 +295,7 @@ save_texreg_tex <- function(texreg_table, file) {
 # Save a ggplot as PDF with the same dimensions as the quarto manuscript (fig-width 6, fig-asp 0.618)
 
 save_figure_pdf <- function(plot, file) {
-  ggsave(file, plot, width = 6, height = 6 * 0.618, device = "pdf")
+  write_with_retry(function() ggsave(file, plot, width = 6, height = 6 * 0.618, device = "pdf"))
 }
 
 ## ----- Numbers cited in the text -----
@@ -88,9 +303,9 @@ save_figure_pdf <- function(plot, file) {
 # Write named values as LaTeX macros (e.g. list(NumObs = 642) becomes \newcommand{\NumObs}{642})
 
 write_tex_macros <- function(values, file) {
-  c("% Generated by the R scripts in code/; do not edit by hand",
-    sprintf("\\newcommand{\\%s}{%s}", names(values), unlist(values))) %>%
-    write_lines(file)
+  tex <- c("% Generated by the R scripts in code/; do not edit by hand",
+           sprintf("\\newcommand{\\%s}{%s}", names(values), unlist(values)))
+  write_with_retry(function() write_lines(tex, file))
 }
 
 # Format a p-value as cited in the text: two significant figures, or "unestimable" if it could not be computed

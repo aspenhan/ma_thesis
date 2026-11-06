@@ -22,7 +22,8 @@ slider_class_data <- read_rds("data/slider_class_data_clean.rds")
 
 sets_completed_dist_comp_lab <- ggplot(data = slider_lab_data, aes(x = sets_completed, color = treatment)) +
   stat_ecdf(geom = "step", linewidth = 0.8) +
-  labs(x = "Sets completed", y = "Probability", color = "Treatments") +
+  labs(x = "Sets completed", y = "Cumulative proportion", color = "Treatment group") +
+  scale_color_discrete(labels = treatment_names) +
   def_theme
 
 save_figure_pdf(sets_completed_dist_comp_lab, "output/figures/dist_comp_sets_completed_lab.pdf")
@@ -31,7 +32,8 @@ save_figure_pdf(sets_completed_dist_comp_lab, "output/figures/dist_comp_sets_com
 
 mistake_rate_dist_comp_lab <- ggplot(data = slider_lab_data, aes(x = mistake_rate, color = treatment)) +
   stat_ecdf(geom = "step", linewidth = 0.8) +
-  labs(x = "Mistake rate", y = "Probability", color = "Treatments") +
+  labs(x = "Mistake rate (%)", y = "Cumulative proportion", color = "Treatment group") +
+  scale_color_discrete(labels = treatment_names) +
   def_theme
 
 save_figure_pdf(mistake_rate_dist_comp_lab, "output/figures/dist_comp_mistake_rate_lab.pdf")
@@ -92,7 +94,8 @@ write_csv(distribution_tests_lab, "results/numbers_in_paper/distribution_tests_l
 
 sets_completed_dist_comp_class <- ggplot(data = slider_class_data, aes(x = sets_completed, color = treatment)) +
   stat_ecdf(geom = "step", linewidth = 0.8) +
-  labs(x = "Sets completed", y = "Probability", color = "Treatments") +
+  labs(x = "Sets completed", y = "Cumulative proportion", color = "Treatment group") +
+  scale_color_discrete(labels = treatment_names) +
   def_theme
 
 save_figure_pdf(sets_completed_dist_comp_class, "output/figures/dist_comp_sets_completed_class.pdf")
@@ -101,7 +104,8 @@ save_figure_pdf(sets_completed_dist_comp_class, "output/figures/dist_comp_sets_c
 
 mistake_rate_dist_comp_class <- ggplot(data = slider_class_data, aes(x = mistake_rate, color = treatment)) +
   stat_ecdf(geom = "step", linewidth = 0.8) +
-  labs(x = "Mistake rate", y = "Probability", color = "Treatments") +
+  labs(x = "Mistake rate (%)", y = "Cumulative proportion", color = "Treatment group") +
+  scale_color_discrete(labels = treatment_names) +
   def_theme
 
 save_figure_pdf(mistake_rate_dist_comp_class, "output/figures/dist_comp_mistake_rate_class.pdf")
