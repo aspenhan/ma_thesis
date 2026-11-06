@@ -93,7 +93,8 @@
 \input{output/numbers/regression_numbers_appendix.tex}
 
 %---------------------------------------------------------------------------------------------------
-% Treatment group names. The generated tables, figures and survey screenshots call them Treatments 1-4.
+% Treatment group names. The treatment groups table, the equations and the survey screenshots number
+% them 1-4.
 % \Ctrl, \LP, \SP and \LN give the italicised names used in prose; the ...Name versions are plain, for
 % table cells.
 %---------------------------------------------------------------------------------------------------
@@ -106,7 +107,6 @@
 \newcommand{\LP}{\textit{\LPName}}
 \newcommand{\SP}{\textit{\SPName}}
 \newcommand{\LN}{\textit{\LNName}}
-\newcommand{\TreatmentKey}{Treatments 1--4 are \Ctrl{}, \LP{}, \SP{} and \LN{}.}
 
 %---------------------------------------------------------------------------------------------------
 % Helpers
@@ -241,15 +241,15 @@ Table~\ref{tab:treatment-groups} summarises the four groups. ``Lenient'' and ``S
 
 \begin{table}[htbp]
 \centering
-\caption{Treatment groups. \TreatmentKey}\label{tab:treatment-groups}
-\begin{tabularx}{\linewidth}{@{}ll>{\raggedright\arraybackslash}Xl@{}}
+\caption{Treatment groups}\label{tab:treatment-groups}
+\begin{tabularx}{\linewidth}{@{}cll>{\raggedright\arraybackslash}Xl@{}}
 \toprule
-Group & Targets & Assessment criterion & Action plan \\
+Treatment Group & Name & Targets & Assessment criterion & Action plan \\
 \midrule
-\CtrlName{} & No & Strict for sure & -- \\
-\LPName{} & Yes & 75\% lenient, 25\% strict & Yes \\
-\SPName{} & Yes & 25\% lenient, 75\% strict & Yes \\
-\LNName{} & Yes & 75\% lenient, 25\% strict & No \\
+1 & \CtrlName{} & No & Strict for sure & -- \\
+2 & \LPName{} & Yes & 75\% lenient, 25\% strict & Yes \\
+3 & \SPName{} & Yes & 25\% lenient, 75\% strict & Yes \\
+4 & \LNName{} & Yes & 75\% lenient, 25\% strict & No \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -344,7 +344,7 @@ Randomisation produced balanced groups. A joint likelihood ratio test does not r
 
 \begin{table}[htbp]
 \centering
-\caption{Covariates by treatment group (pooled sample). \TreatmentKey}\label{tab:covariates-sumstats-pooled}
+\caption{Covariates by treatment group (pooled sample)}\label{tab:covariates-sumstats-pooled}
 {\input{output/tables/covariates_sumstats_pooled.tex}\par}
 \end{table}
 
@@ -409,13 +409,13 @@ These self-reports were collected after the task, from the participants who chos
 
 \begin{table}[htbp]
 \centering
-\caption{Slider task performance by sample and treatment group. \TreatmentKey}\label{tab:slider-performance-sumstats}
+\caption{Slider task performance by sample and treatment group}\label{tab:slider-performance-sumstats}
 \input{output/tables/performance_sumstats.tex}
 \end{table}
 
 \begin{figure}[htbp]
 \centering
-\caption{Cumulative distributions of slider task performance by treatment group (pooled sample). \TreatmentKey}\label{fig:slider-performance-distribution-comparison}
+\caption{Cumulative distributions of slider task performance by treatment group (pooled sample)}\label{fig:slider-performance-distribution-comparison}
 \begin{subfigure}{\linewidth}
 \centering
 \caption{Sets completed}\label{fig:slider-performance-distribution-comparison-1}
@@ -430,19 +430,19 @@ These self-reports were collected after the task, from the participants who chos
 
 \begin{table}[htbp]
 \centering
-\caption{Treatment effects on the probability of meeting the accuracy target (pooled sample, logit). \TreatmentKey}\label{tab:reg-target}
+\caption{Treatment effects on the probability of meeting the accuracy target (pooled sample, logit)}\label{tab:reg-target}
 \input{output/tables/reg_target.tex}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\caption{Treatment effects on the mistake rate (pooled sample). \TreatmentKey}\label{tab:reg-mistakes}
+\caption{Treatment effects on the mistake rate (pooled sample)}\label{tab:reg-mistakes}
 \input{output/tables/reg_mistakes.tex}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\caption{Treatment effects on sets completed (pooled sample). \TreatmentKey}\label{tab:reg-sets}
+\caption{Treatment effects on sets completed (pooled sample)}\label{tab:reg-sets}
 \input{output/tables/reg_sets.tex}
 \end{table}
 
@@ -471,19 +471,19 @@ The results do not support the reference-point interpretation (Tables~\ref{tab:r
 
 \begin{table}[htbp]
 \centering
-\caption{Treatment effects on the probability of meeting the accuracy target, interacted with loss aversion. \TreatmentKey}\label{tab:reg-target-la}
+\caption{Treatment effects on the probability of meeting the accuracy target, interacted with loss aversion}\label{tab:reg-target-la}
 \input{output/tables/reg_target_la.tex}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\caption{Treatment effects on the mistake rate, interacted with loss aversion. \TreatmentKey}\label{tab:reg-mistakes-la}
+\caption{Treatment effects on the mistake rate, interacted with loss aversion}\label{tab:reg-mistakes-la}
 \input{output/tables/reg_mistakes_la.tex}
 \end{table}
 
 \begin{table}[htbp]
 \centering
-\caption{Treatment effects on sets completed, interacted with loss aversion. \TreatmentKey}\label{tab:reg-sets-la}
+\caption{Treatment effects on sets completed, interacted with loss aversion}\label{tab:reg-sets-la}
 \input{output/tables/reg_sets_la.tex}
 \end{table}
 
@@ -494,7 +494,7 @@ The results do not support the reference-point interpretation (Tables~\ref{tab:r
 The point estimates line up with the extended model. In the specifications that control for baseline performance, the \SP{} coefficients are smaller in magnitude than the \LP{} coefficients in all three regressions: \SP{} raised sets completed by 0.7--1.0 (not significant), against 1.2--1.5 for \LP{}, and its effects on the accuracy target and the mistake rate are closer to zero. There is no sign of the extra care over accuracy that the standard model predicts. The distributions point the same way, more strongly: \SP{} is the only group whose mistake rates differ from the others (Kruskal--Wallis across groups $p = \DistTestPooledMistakeRateAllTreatmentsPval{}$; pairwise Kolmogorov--Smirnov $p = \DistTestPooledMistakeRateOneVsThreePval{}$ against \Ctrl{}, $p = \DistTestPooledMistakeRateTwoVsThreePval{}$ against \LP{} and $p = \DistTestPooledMistakeRateThreeVsFourPval{}$ against \LN{}). Only 37\% of \SP{} participants made no mistakes, against about half in every other group.% Share computed from data/slider_full_data_clean.rds
 \ Taken at face value, participants told that both targets would probably be very hard to meet took less care, not more.
 
-None of this is statistically convincing. The differences between the \SP{} and \LP{} coefficients are not significant in any pooled regression (controlling for baseline performance without and with covariates respectively, $p = \CoefTestPooledAccuracyTargetModelThreePval{}$ and $\CoefTestPooledAccuracyTargetModelFourPval{}$ for the accuracy target and $p = \CoefTestPooledSetsCompletedModelThreePval{}$ and $\CoefTestPooledSetsCompletedModelFourPval{}$ for sets completed; for the mistake rate, $p = \CoefTestPooledMistakeRateModelThreePval{}$ without covariates, and the test cannot be computed with them). The difference in mistake rates shrinks once baseline performance is controlled for, and it comes from the class sample; there is none in the lab sample (Appendix~\ref{app:figures-tables}). The subsamples do not agree with each other either. In the lab sample, \SP{} participants responded significantly less than \LP{} participants in the probability of meeting the accuracy target ($p = \CoefTestLabAccuracyTargetModelThreePval{}$ without covariates and $\CoefTestLabAccuracyTargetModelFourPval{}$ with them), but had slightly lower mistake rates, as the standard model predicts; in the class sample, \SP{} responded less in sets and mistake rates but not in the accuracy target. Finally, the \SP{} mistake rates differ from those in \Ctrl{} as well as \LP{}, which attenuation alone would not produce: attenuation moves \SP{} towards \Ctrl{}, not beyond it. Disengagement, that is, giving up on accuracy once the joint target seems out of reach, would produce it, and is in the spirit of the extended model. But sampling noise is an equally plausible explanation, since the macroeconomics class \SP{} group had the highest mean mistake rate (12\%) of any group in any sample.
+None of this is statistically convincing. The differences between the \SP{} and \LP{} coefficients are not significant in any pooled regression (controlling for baseline performance without and with covariates respectively, $p = \CoefTestPooledAccuracyTargetBaselinesPval{}$ and $\CoefTestPooledAccuracyTargetBaselinesAndCovariatesPval{}$ for the accuracy target and $p = \CoefTestPooledSetsCompletedBaselinesPval{}$ and $\CoefTestPooledSetsCompletedBaselinesAndCovariatesPval{}$ for sets completed; for the mistake rate, $p = \CoefTestPooledMistakeRateBaselinesPval{}$ without covariates, and the test cannot be computed with them). The difference in mistake rates shrinks once baseline performance is controlled for, and it comes from the class sample; there is none in the lab sample (Appendix~\ref{app:figures-tables}). The subsamples do not agree with each other either. In the lab sample, \SP{} participants responded significantly less than \LP{} participants in the probability of meeting the accuracy target ($p = \CoefTestLabAccuracyTargetBaselinesPval{}$ without covariates and $\CoefTestLabAccuracyTargetBaselinesAndCovariatesPval{}$ with them), but had slightly lower mistake rates, as the standard model predicts; in the class sample, \SP{} responded less in sets and mistake rates but not in the accuracy target. Finally, the \SP{} mistake rates differ from those in \Ctrl{} as well as \LP{}, which attenuation alone would not produce: attenuation moves \SP{} towards \Ctrl{}, not beyond it. Disengagement, that is, giving up on accuracy once the joint target seems out of reach, would produce it, and is in the spirit of the extended model. But sampling noise is an equally plausible explanation, since the macroeconomics class \SP{} group had the highest mean mistake rate (12\%) of any group in any sample.
 
 Two features of the design make attenuation hard to detect even if it exists. First, it is a fraction of a response that is itself only about one set: halving the \LP{} response would mean a difference of about 0.6 sets, against standard errors of 0.5--0.6 on each coefficient, so detecting it reliably would take a sample several times larger. Second, because no one could reach the speed target, the realised chance of meeting both targets was zero in both groups. Participants who discovered this during the task would have converged in their beliefs, shrinking the difference in $\mathbb{P}^E$ that the treatment was designed to create.
 
@@ -527,8 +527,6 @@ The experiment suggests how a better test could be designed. The targets should 
 \renewcommand{\thetable}{\thesection\arabic{table}}
 
 \section{Figures and tables}\label{app:figures-tables}
-
-In all tables and figures, \TreatmentKey
 
 \begin{table}[p]
 \centering
