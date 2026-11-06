@@ -298,7 +298,7 @@ save_regression_tex <- function(models, file, outcome, coef_map, note, groups = 
   coef_map <- coef_map[names(coef_map) %in% present]
   group_rows <- groups %>%
     map(~ which(names(coef_map) %in% .x)) %>%
-    discard(~ length(.x) == 0)
+    discard(~ length(.x) < 2) #a heading only for two or more rows (e.g. not for Female or No college alone)
   # Logits: replace texreg's default standard errors and p-values with robust ones (lm_robust models already have them)
   robust_tests <- if (inherits(models[[1]], "glm")) map(models, ~ coeftest(.x, vcov. = robust_vcov(.x)))
   tabular <- texreg(models, digits = 2, stars = star_levels, include.ci = FALSE,
