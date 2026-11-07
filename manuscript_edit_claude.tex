@@ -194,12 +194,6 @@ Participants completed the study online in Qualtrics. It had two parts: a five-m
 
 Each page of the task showed a set of three sliders, each to be moved to a designated number on a scale from 0 to 100 (Figure~\ref{fig:slider-set-example}). A set counted as \emph{completed} if all three sliders were within $\pm 10$ of their designated numbers, and as \emph{correct} only if all three were exactly on them; a set that was not correct counted as a mistake.\footnote{Requiring some precision even for completion mirrors jobs in which output must meet a minimum standard, and makes the task less mindless than pure dragging.} Moving on to the next page counted as attempting the set. Participants were assessed in two dimensions that pull against each other: \emph{speed}, the number of sets completed, and \emph{accuracy}, the share of attempted sets that were mistakes. Positioning sliders exactly takes time, so more accuracy means fewer sets. Each page showed the time elapsed, sets completed and mistakes made so far. Participants first practised for one minute on a demo task, whose results serve as a baseline measure of ability, and then received the instructions for their group.
 
-\begin{figure}[htbp]
-\centering
-\caption{Example of a set in the slider task}\label{fig:slider-set-example}
-\includegraphics[width=0.75\linewidth]{survey_screenshots/slider_task_set_example.png}
-\end{figure}
-
 The task is tedious, so effort is costly, and simple, so performance depends more on effort than on skill or education. Its abstractness is deliberate: the aim is to identify how people respond to multiple targets in general rather than in a particular job. Five minutes at low stakes is far from a real job, but it captures how a worker responds to targets within a single task, such as one delivery or one ride.
 
 \subsection{Targets, assessment criteria and action plans}
@@ -210,42 +204,9 @@ The task is tedious, so effort is costly, and simple, so performance depends mor
 
 \paragraph{Action plan (secondary treatment).} The two targets are stated in different units, so pursuing both requires working out how many mistakes are allowed at each level of speed. Some treated participants were given a table that does this for them (Table~\ref{tab:action-plan}): for each number of sets completed, it lists the maximum number of actual mistakes compatible with the accuracy target under each criterion. The table turns two separate targets into a single plan (``if I complete 45 sets, I can afford 4 mistakes if assessed strictly and 18 if assessed leniently''), which integrates both reference points and spares participants the computation. Under the extended model this should strengthen the response to the targets; under the standard model it should make no difference, since it contains nothing that participants could not work out themselves. I treat this as the secondary test because the manipulation is weaker: participants can do the arithmetic themselves, and whether they used the table is hard to verify.
 
-\begin{table}[htbp]
-\centering
-\caption{The action plan shown to the \LP{} and \SP{} groups. The bold row corresponds to just meeting both targets.}\label{tab:action-plan}
-\begin{tabular}{@{}ccc@{}}
-\toprule
- & \multicolumn{2}{c}{Maximum actual mistakes} \\
-\cmidrule(l){2-3}
-Sets completed & Strict criterion & Lenient criterion \\
-\midrule
-35 & 3 & 14 \\
-40 & 4 & 16 \\
-\textbf{45} & \textbf{4} & \textbf{18} \\
-50 & 5 & 20 \\
-55 & 5 & 22 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
 \subsection{Treatment groups}
 
 Table~\ref{tab:treatment-groups} summarises the four groups. ``Lenient'' and ``Strict'' refer to the criterion that is more likely (75\%) to be applied, and ``with Plan'' or ``without Plan'' to whether the action plan was shown. \Ctrl{} participants were given no targets, were told nothing about assessment criteria, and were assessed strictly. Comparing \LP{} with \Ctrl{} tests whether the targets act as reference points at all, which both models require. Comparing \SP{} with \LP{} is the main test, of the probabilistic expectations channel; comparing \LN{} with \LP{} is the secondary test, of the cognitive complexity channel. Treated participants had to pass a comprehension check before starting the task. The instructions and comprehension check are reproduced in Appendix~\ref{app:survey}.
-
-\begin{table}[htbp]
-\centering
-\caption{Treatment groups}\label{tab:treatment-groups}
-\begin{tabularx}{\linewidth}{@{}cll>{\raggedright\arraybackslash}Xl@{}}
-\toprule
-Treatment Group & Name & Targets & Assessment criterion & Action plan \\
-\midrule
-1 & \CtrlName{} & No & Strict for sure & -- \\
-2 & \LPName{} & Yes & 75\% lenient, 25\% strict & Yes \\
-3 & \SPName{} & Yes & 25\% lenient, 75\% strict & Yes \\
-4 & \LNName{} & Yes & 75\% lenient, 25\% strict & No \\
-\bottomrule
-\end{tabularx}
-\end{table}
 
 \subsection{Payment}
 
@@ -303,22 +264,6 @@ Both models predict that the targets change behaviour relative to \Ctrl{}. A par
 
 The models disagree about the treated groups. In the standard model, a higher chance of strict assessment (\SP{}) makes each mistake more likely to be recorded and so raises the marginal value of accuracy: \SP{} participants should be more accurate than \LP{} participants, possibly at some cost in speed. The action plan adds no information, so \LN{} and \LP{} participants should behave alike. In the extended model, \SP{} lowers $\mathbb{P}^E$ and removing the plan (\LN{}) lowers $\theta$. Both scale down the response to \emph{both} targets, so these groups should behave more like \Ctrl{} than \LP{} does, in both dimensions.
 
-\begin{table}[htbp]
-\centering
-\caption{Predictions of the two models}\label{tab:predictions}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
-\toprule
-Comparison & Standard KR model & Extended model \\
-\midrule
-\makecell[tl]{\LPName{} vs\\ \CtrlName{}\\ (do the targets matter?)} & More effort towards speed; ambiguous effect on accuracy & Same \\
-\addlinespace
-\makecell[tl]{\SPName{} vs\\ \LPName{}\\ (main test)} & More accurate; same speed or slower & Weaker response in both dimensions (closer to \CtrlName{}) \\
-\addlinespace
-\makecell[tl]{\LNName{} vs\\ \LPName{}\\ (secondary test)} & No difference & Weaker response in both dimensions (closer to \CtrlName{}) \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
 \noindent The results section tests these predictions in order:
 
 \begin{itemize}
@@ -335,18 +280,6 @@ The sample consists of the 642 participants who completed the study:\footnote{79
 
 Randomisation produced balanced groups. A joint likelihood ratio test does not reject balance across the four groups in the pooled sample ($\chi^2 = 67.66$, $p = 0.52$) or in any of the three sources (the lowest is $p = 0.15$, in the lab sample). Covariate by covariate, only two tests reject at or near the 5\% level, both in the lab sample (race, $p = 0.050$, and having studied economics, $p = 0.017$), which is about what chance alone would produce across this many tests. The regressions below are also estimated with these covariates as controls.
 
-\begin{table}[htbp]
-\centering
-\caption{Covariates by treatment group (pooled sample)}\label{tab:covariates-sumstats-pooled}
-\begin{threeparttable}
-\input{output/tables/covariates_sumstats_pooled.tex}
-\begin{tablenotes}[flushleft]
-\footnotesize
-\item \textit{Notes:} Each cell is the proportion of participants in the category, among those who answered the question (for studied economics and used mouse, the proportion answering yes), except for age, which is the mean. The p-values test for differences between the four treatment groups, using (a) Fisher's exact test, simulated with 10,000 replicates, and the Kruskal--Wallis test for age, and (b) Pearson's $\chi^2$ test and Welch's one-way $F$ test for age. ***~$p<0.01$, **~$p<0.05$, *~$p<0.1$.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
-
 \subsection{Performance by sample}
 
 Students completed more sets than lab participants (about 26 against 22.4 on average; $p < 0.001$ for each class against the lab, Welch $t$-tests), although they were less likely to use a mouse (31--32\% against 58\%). Mistake rates are about 7\% in all three sources (Table~\ref{tab:slider-performance-sumstats}). The two class samples do not differ from each other in any measure, so I combine them into one class sample and report results for the pooled sample and, as a robustness check, for the lab and class samples separately. All regressions control for baseline speed in the demo task, which absorbs much of the difference between sources.
@@ -357,21 +290,6 @@ The design relies on speed and accuracy being in tension. Figure~\ref{fig:effort
 
 Figure~\ref{fig:effort-tradeoffs-2} drops observations outside Tukey's fences (more than 1.5 times the interquartile range beyond the quartiles), applied separately to sets completed and the mistake rate. This removes 62 participants (10\%), almost all for having a mistake rate above 17.9\%; the rest completed fewer than 9 sets.% Counts computed from data/slider_full_data_clean.rds using the rule in code/descriptive_figures.R
 \ The rule is poorly suited to the mistake rate, whose distribution is heavily skewed with almost half its mass at zero: it classifies the whole upper tail as outliers, even though these are genuine choices rather than recording errors, and they are precisely the observations that reveal the trade-off. Panel (b) is therefore best read as a view of the bulk of the distribution rather than as a robustness check. Within that bulk the relationship is close to flat, with at most a slight upward slope.\footnote{The curved bands in panel (b) are mechanical: a fixed number of mistakes produces a mistake rate that falls as more sets are attempted.} No observations are excluded from any other analysis.
-
-\begin{figure}[htbp]
-\centering
-\caption{Speed and accuracy in the slider task. Point size shows the number of participants; the line is a loess fit with its 95\% confidence band.}\label{fig:effort-tradeoffs}
-\begin{subfigure}{\linewidth}
-\centering
-\caption{All participants}\label{fig:effort-tradeoffs-1}
-\includegraphics[width=0.75\linewidth]{output/figures/effort_tradeoffs_all.pdf}
-\end{subfigure}
-\begin{subfigure}{\linewidth}
-\centering
-\caption{Excluding participants outside Tukey's fences on either measure (62 of 642)}\label{fig:effort-tradeoffs-2}
-\includegraphics[width=0.75\linewidth]{output/figures/effort_tradeoffs_no_outliers.pdf}
-\end{subfigure}
-\end{figure}
 
 \section{Results}
 
@@ -406,17 +324,82 @@ The response is small, however, and the data cannot tell apart several explanati
 \end{itemize}
 These self-reports were collected after the task, from the participants who chose to answer, and may partly rationalise behaviour, so they are suggestive only.% Survey counts computed from data/slider_full_data_clean.rds
 
-\begin{table}[htbp]
+\subsection{Are the responses driven by loss aversion?}
+
+If the response to the targets comes from reference dependence, it should be stronger for more loss-averse participants. I test this by adding each participant's loss aversion, $\lambda_i$, and its interaction with \LP{} to the two specifications that control for baseline performance:
+\[
+\log \frac{\mathbb{P}(A_i = 1)}{\mathbb{P}(A_i = 0)} = \pi_1 + \pi_2 T_{2i} + \pi_3 T_{3i} + \pi_4 T_{4i} + \tau_1 \lambda_i + \tau_2(T_{2i} \times \lambda_i) + \rho\, strict_i + \sigma' X_i \tag{4}
+\]
+with analogous linear regressions (5) and (6) for the mistake rate and sets completed. If the \LP{} response reflects loss aversion, $\tau_2$ should have the same sign as $\pi_2$; in particular, more loss-averse participants should show a larger increase in sets completed and a larger fall in the probability of meeting the accuracy target. I focus on \LP{} because it is the comparison on which both models agree, and to save degrees of freedom.
+
+Loss aversion is estimated following \textcite{campos-mercade.2024.gustibusdisputes}, who assume KR preferences. Participants stated the number of correct sets they would complete under each of seven fixed piece rates and seven random piece rates; each random piece rate pays a high or a low rate with equal probability and has the same expected value as one of the fixed rates. With an effort cost function $c(e) = \frac{1}{\alpha \omega} e^\omega$, as in the original paper and following \textcite{augenblick.2019.experimenttime}, stated effort satisfies approximately
+\[
+\begin{aligned}
+& \log(e_i) \approx J_i + K_i \log(\bar{w}) - L_i \frac{\Delta w}{\bar w}, \quad \text{where} \\
+& J_i = \frac {\log(\alpha_i)}{\omega_i - 1}; \quad K_i = \frac {1}{\omega_i - 1}; \quad L_i = \frac {\lambda_i -1}{4(\omega_i - 1)} = \frac {1}{4} K_i (\lambda_i -1)
+\end{aligned}
+\]
+$\bar w$ is the average piece rate, and $\Delta w = w_h - w_l$ is the spread between the high and low piece rates (zero for fixed rates). I estimate the equation for each participant by OLS and recover $\lambda_i$ from $L_i$ and $K_i$.\footnote{Estimates of $\lambda_i$ were top-coded at 4.33, because the largest $\frac{\Delta w}{\bar w}$ in the survey is 1.2 and the logarithm in the exact equation
+  \[
+  \log(e_i) = J_i + K_i \log(\bar{w}) + K_i \log\Bigl(1 + 0.25 (1 - \lambda_i) \frac{\Delta w}{\bar w}\Bigr)
+  \]
+  is otherwise undefined. They were bottom-coded at 0, since negative values would imply utility gains from losses.}
+
+The results do not support the reference-point interpretation (Tables~\ref{tab:reg-target-la}--\ref{tab:reg-sets-la}). The interaction has the opposite sign to the prediction for the accuracy target (positive) and for sets completed (negative, and close to zero), and none of the interaction terms is significant. The test is weak, however. The loss aversion measure comes from unincentivised, hypothetical choices, and almost half of the raw estimates (248 of 503) fall outside the range the method allows, 176 of them below zero. The prediction is also ambiguous if participants hold internal accuracy goals: a loss-averse participant is pulled towards accuracy by those goals and towards speed by the external speed target, so loss aversion can amplify either response. I therefore read this check as failing to confirm, rather than refuting, that the responses come from reference points. It adds to the uncertainty about whether the primed targets became reference points at all, which in turn limits what the next two tests can show. Since none of the treatment differences below is significant, I do not pursue the planned analysis of heterogeneous effects.
+
+\subsection{Main test: does a lower chance of meeting both targets weaken the response?}
+
+\SP{} participants faced the same targets as \LP{} participants but a 75\% rather than a 25\% chance of strict assessment. The standard model predicts that they should take more care over accuracy; the extended model predicts a weaker response to both targets, that is, behaviour closer to \Ctrl{}.
+
+The point estimates line up with the extended model. In the specifications that control for baseline performance, the \SP{} coefficients are smaller in magnitude than the \LP{} coefficients in all three regressions: \SP{} raised sets completed by 0.7--1.0 (not significant), against 1.2--1.5 for \LP{}, and its effects on the accuracy target and the mistake rate are closer to zero. There is no sign of the extra care over accuracy that the standard model predicts. The distributions point the same way, more strongly: \SP{} is the only group whose mistake rates differ from the others (Kruskal--Wallis across groups $p = 0.013$; pairwise Kolmogorov--Smirnov $p = 0.0051$ against \Ctrl{}, $p = 0.049$ against \LP{} and $p = 0.012$ against \LN{}). Only 37\% of \SP{} participants made no mistakes, against about half in every other group.% Share computed from data/slider_full_data_clean.rds
+\ Taken at face value, participants told that both targets would probably be very hard to meet took less care, not more.
+
+None of this is statistically convincing. The differences between the \SP{} and \LP{} coefficients are not significant in any pooled regression (controlling for baseline performance without and with covariates respectively, $p = 0.38$ and $0.90$ for the accuracy target and $p = 0.34$ and $0.30$ for sets completed; for the mistake rate, $p = 0.65$ without covariates, and the test cannot be computed with them). The difference in mistake rates shrinks once baseline performance is controlled for, and it comes from the class sample; there is none in the lab sample (Appendix~\ref{app:figures-tables}). The subsamples do not agree with each other either. In the lab sample, \SP{} participants responded significantly less than \LP{} participants in the probability of meeting the accuracy target ($p = 0.031$ without covariates and $0.19$ with them), but had slightly lower mistake rates, as the standard model predicts; in the class sample, \SP{} responded less in sets and mistake rates but not in the accuracy target. Finally, the \SP{} mistake rates differ from those in \Ctrl{} as well as \LP{}, which attenuation alone would not produce: attenuation moves \SP{} towards \Ctrl{}, not beyond it. Disengagement, that is, giving up on accuracy once the joint target seems out of reach, would produce it, and is in the spirit of the extended model. But sampling noise is an equally plausible explanation, since the macroeconomics class \SP{} group had the highest mean mistake rate (12\%) of any group in any sample.
+
+Two features of the design make attenuation hard to detect even if it exists. First, it is a fraction of a response that is itself only about one set: halving the \LP{} response would mean a difference of about 0.6 sets, against standard errors of 0.5--0.6 on each coefficient, so detecting it reliably would take a sample several times larger. Second, because no one could reach the speed target, the realised chance of meeting both targets was zero in both groups. Participants who discovered this during the task would have converged in their beliefs, shrinking the difference in $\mathbb{P}^E$ that the treatment was designed to create.
+
+\subsection{Secondary test: does an action plan strengthen the response?}
+
+\LN{} participants faced the same targets and assessment probabilities as \LP{} participants but were not shown the action plan. The extended model predicts a weaker response without the plan; the standard model predicts no difference. There is no consistent evidence of a difference. \LN{} raised sets completed by 1.4--1.6, slightly more than \LP{}, and its effect on the mistake rate is similar to that of \LP{}; for both outcomes the two groups' coefficients are within a fraction of a standard error of each other. The only hint of attenuation is in the probability of meeting the accuracy target, where the \LN{} coefficient is close to zero while the \LP{} coefficient is negative, but the gap is of the order of one standard error and sets completed point the other way. The distributions of both outcomes in the two groups are almost identical (Kolmogorov--Smirnov $p = 0.97$ for sets and $p = 1.0$ for the mistake rate). In the lab and class samples the comparison is imprecise and points in no consistent direction.
+
+The manipulation may simply not have changed how well participants understood the targets. Of the 285 participants who were shown the plan and answered the question, 107 said it did not make the targets easier or more motivating to achieve. Time spent on the instructions admits two readings. \LN{} participants spent far longer on them (143.30 seconds on average, against 59.34 for \LP{} and 52.32 for \SP{}). One reading is that participants with the table skimmed it rather than used it. Another is that participants without it spent the extra time working out the relation between sets and mistakes for themselves, so that both groups ended up with a similar plan. On the second reading the plan saved time rather than changing behaviour, and the cognitive complexity channel remains untested rather than refuted.
+
+\section{Conclusion}
+
+This paper asked whether reference points in different dimensions interact, which existing models rule out by assuming that gain--loss utility is additively separable across dimensions. I proposed an extension of the KR model in which the weight on gain--loss utility depends on the expected probability of meeting all targets jointly (the main channel) and on how easily the targets can be combined into one action plan (the secondary channel), and tested it in a real-effort experiment with a speed target and an accuracy target.
+
+The evidence is inconclusive. The targets raised speed modestly. Making the targets jointly harder to reach weakened the response in both dimensions, as the extended model predicts and contrary to the standard model, but not significantly, and the action plan made no difference. Whether the primed targets acted as reference points at all is itself uncertain: participants seemed to bring strong accuracy goals of their own, and a loss aversion check did not support a reference-point interpretation.
+
+The experiment suggests how a better test could be designed. The targets should be calibrated, with pilots on the actual subject pool, so that each is within reach; meeting them should carry real stakes; and the sample should be sized to detect differences between treated groups, not just the effect of the targets. The clearest lesson is that externally set targets compete with the goals people already hold. How people reconcile their own goals with targets set by others is a question for future work, with direct relevance to how organisations set targets for their employees.
+
+\newpage
+
+\printbibliography[heading=bibintoc, title={References}]
+
+\clearpage
+
+% Figures and tables of the main text, figures first; \clearpage keeps each group together
+
+\begin{figure}[htbp]
 \centering
-\caption{Slider task performance by sample and treatment group}\label{tab:slider-performance-sumstats}
-\begin{threeparttable}
-\input{output/tables/performance_sumstats.tex}
-\begin{tablenotes}[flushleft]
-\footnotesize
-\item \textit{Notes:} Each cell is the mean, with the standard deviation in parentheses. The pooled sample combines the lab and both class samples.
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+\caption{Example of a set in the slider task}\label{fig:slider-set-example}
+\includegraphics[width=0.75\linewidth]{survey_screenshots/slider_task_set_example.png}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\caption{Speed and accuracy in the slider task. Point size shows the number of participants; the line is a loess fit with its 95\% confidence band.}\label{fig:effort-tradeoffs}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{All participants}\label{fig:effort-tradeoffs-1}
+\includegraphics[width=0.75\linewidth]{output/figures/effort_tradeoffs_all.pdf}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Excluding participants outside Tukey's fences on either measure (62 of 642)}\label{fig:effort-tradeoffs-2}
+\includegraphics[width=0.75\linewidth]{output/figures/effort_tradeoffs_no_outliers.pdf}
+\end{subfigure}
+\end{figure}
 
 \begin{figure}[htbp]
 \centering
@@ -432,6 +415,81 @@ These self-reports were collected after the task, from the participants who chos
 \includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_pooled.pdf}
 \end{subfigure}
 \end{figure}
+
+\clearpage
+
+\begin{table}[htbp]
+\centering
+\caption{The action plan shown to the \LP{} and \SP{} groups. The bold row corresponds to just meeting both targets.}\label{tab:action-plan}
+\begin{tabular}{@{}ccc@{}}
+\toprule
+ & \multicolumn{2}{c}{Maximum actual mistakes} \\
+\cmidrule(l){2-3}
+Sets completed & Strict criterion & Lenient criterion \\
+\midrule
+35 & 3 & 14 \\
+40 & 4 & 16 \\
+\textbf{45} & \textbf{4} & \textbf{18} \\
+50 & 5 & 20 \\
+55 & 5 & 22 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Treatment groups}\label{tab:treatment-groups}
+\begin{tabularx}{\linewidth}{@{}cll>{\raggedright\arraybackslash}Xl@{}}
+\toprule
+Treatment Group & Name & Targets & Assessment criterion & Action plan \\
+\midrule
+1 & \CtrlName{} & No & Strict for sure & -- \\
+2 & \LPName{} & Yes & 75\% lenient, 25\% strict & Yes \\
+3 & \SPName{} & Yes & 25\% lenient, 75\% strict & Yes \\
+4 & \LNName{} & Yes & 75\% lenient, 25\% strict & No \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Predictions of the two models}\label{tab:predictions}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+\toprule
+Comparison & Standard KR model & Extended model \\
+\midrule
+\makecell[tl]{\LPName{} vs\\ \CtrlName{}\\ (do the targets matter?)} & More effort towards speed; ambiguous effect on accuracy & Same \\
+\addlinespace
+\makecell[tl]{\SPName{} vs\\ \LPName{}\\ (main test)} & More accurate; same speed or slower & Weaker response in both dimensions (closer to \CtrlName{}) \\
+\addlinespace
+\makecell[tl]{\LNName{} vs\\ \LPName{}\\ (secondary test)} & No difference & Weaker response in both dimensions (closer to \CtrlName{}) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Covariates by treatment group (pooled sample)}\label{tab:covariates-sumstats-pooled}
+\begin{threeparttable}
+\input{output/tables/covariates_sumstats_pooled.tex}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item \textit{Notes:} Each cell is the proportion of participants in the category, among those who answered the question (for studied economics and used mouse, the proportion answering yes), except for age, which is the mean. The p-values test for differences between the four treatment groups, using (a) Fisher's exact test, simulated with 10,000 replicates, and the Kruskal--Wallis test for age, and (b) Pearson's $\chi^2$ test and Welch's one-way $F$ test for age. ***~$p<0.01$, **~$p<0.05$, *~$p<0.1$.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Slider task performance by sample and treatment group}\label{tab:slider-performance-sumstats}
+\begin{threeparttable}
+\input{output/tables/performance_sumstats.tex}
+\begin{tablenotes}[flushleft]
+\footnotesize
+\item \textit{Notes:} Each cell is the mean, with the standard deviation in parentheses. The pooled sample combines the lab and both class samples.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
 
 \begin{table}[htbp]
 \centering
@@ -469,29 +527,6 @@ These self-reports were collected after the task, from the participants who chos
 \end{threeparttable}
 \end{table}
 
-\subsection{Are the responses driven by loss aversion?}
-
-If the response to the targets comes from reference dependence, it should be stronger for more loss-averse participants. I test this by adding each participant's loss aversion, $\lambda_i$, and its interaction with \LP{} to the two specifications that control for baseline performance:
-\[
-\log \frac{\mathbb{P}(A_i = 1)}{\mathbb{P}(A_i = 0)} = \pi_1 + \pi_2 T_{2i} + \pi_3 T_{3i} + \pi_4 T_{4i} + \tau_1 \lambda_i + \tau_2(T_{2i} \times \lambda_i) + \rho\, strict_i + \sigma' X_i \tag{4}
-\]
-with analogous linear regressions (5) and (6) for the mistake rate and sets completed. If the \LP{} response reflects loss aversion, $\tau_2$ should have the same sign as $\pi_2$; in particular, more loss-averse participants should show a larger increase in sets completed and a larger fall in the probability of meeting the accuracy target. I focus on \LP{} because it is the comparison on which both models agree, and to save degrees of freedom.
-
-Loss aversion is estimated following \textcite{campos-mercade.2024.gustibusdisputes}, who assume KR preferences. Participants stated the number of correct sets they would complete under each of seven fixed piece rates and seven random piece rates; each random piece rate pays a high or a low rate with equal probability and has the same expected value as one of the fixed rates. With an effort cost function $c(e) = \frac{1}{\alpha \omega} e^\omega$, as in the original paper and following \textcite{augenblick.2019.experimenttime}, stated effort satisfies approximately
-\[
-\begin{aligned}
-& \log(e_i) \approx J_i + K_i \log(\bar{w}) - L_i \frac{\Delta w}{\bar w}, \quad \text{where} \\
-& J_i = \frac {\log(\alpha_i)}{\omega_i - 1}; \quad K_i = \frac {1}{\omega_i - 1}; \quad L_i = \frac {\lambda_i -1}{4(\omega_i - 1)} = \frac {1}{4} K_i (\lambda_i -1)
-\end{aligned}
-\]
-$\bar w$ is the average piece rate, and $\Delta w = w_h - w_l$ is the spread between the high and low piece rates (zero for fixed rates). I estimate the equation for each participant by OLS and recover $\lambda_i$ from $L_i$ and $K_i$.\footnote{Estimates of $\lambda_i$ were top-coded at 4.33, because the largest $\frac{\Delta w}{\bar w}$ in the survey is 1.2 and the logarithm in the exact equation
-  \[
-  \log(e_i) = J_i + K_i \log(\bar{w}) + K_i \log\Bigl(1 + 0.25 (1 - \lambda_i) \frac{\Delta w}{\bar w}\Bigr)
-  \]
-  is otherwise undefined. They were bottom-coded at 0, since negative values would imply utility gains from losses.}
-
-The results do not support the reference-point interpretation (Tables~\ref{tab:reg-target-la}--\ref{tab:reg-sets-la}). The interaction has the opposite sign to the prediction for the accuracy target (positive) and for sets completed (negative, and close to zero), and none of the interaction terms is significant. The test is weak, however. The loss aversion measure comes from unincentivised, hypothetical choices, and almost half of the raw estimates (248 of 503) fall outside the range the method allows, 176 of them below zero. The prediction is also ambiguous if participants hold internal accuracy goals: a loss-averse participant is pulled towards accuracy by those goals and towards speed by the external speed target, so loss aversion can amplify either response. I therefore read this check as failing to confirm, rather than refuting, that the responses come from reference points. It adds to the uncertainty about whether the primed targets became reference points at all, which in turn limits what the next two tests can show. Since none of the treatment differences below is significant, I do not pursue the planned analysis of heterogeneous effects.
-
 \begin{table}[htbp]
 \centering
 \caption{Treatment effects on the probability of meeting the accuracy target, interacted with loss aversion}\label{tab:reg-target-la}
@@ -528,36 +563,7 @@ The results do not support the reference-point interpretation (Tables~\ref{tab:r
 \end{threeparttable}
 \end{table}
 
-\subsection{Main test: does a lower chance of meeting both targets weaken the response?}
-
-\SP{} participants faced the same targets as \LP{} participants but a 75\% rather than a 25\% chance of strict assessment. The standard model predicts that they should take more care over accuracy; the extended model predicts a weaker response to both targets, that is, behaviour closer to \Ctrl{}.
-
-The point estimates line up with the extended model. In the specifications that control for baseline performance, the \SP{} coefficients are smaller in magnitude than the \LP{} coefficients in all three regressions: \SP{} raised sets completed by 0.7--1.0 (not significant), against 1.2--1.5 for \LP{}, and its effects on the accuracy target and the mistake rate are closer to zero. There is no sign of the extra care over accuracy that the standard model predicts. The distributions point the same way, more strongly: \SP{} is the only group whose mistake rates differ from the others (Kruskal--Wallis across groups $p = 0.013$; pairwise Kolmogorov--Smirnov $p = 0.0051$ against \Ctrl{}, $p = 0.049$ against \LP{} and $p = 0.012$ against \LN{}). Only 37\% of \SP{} participants made no mistakes, against about half in every other group.% Share computed from data/slider_full_data_clean.rds
-\ Taken at face value, participants told that both targets would probably be very hard to meet took less care, not more.
-
-None of this is statistically convincing. The differences between the \SP{} and \LP{} coefficients are not significant in any pooled regression (controlling for baseline performance without and with covariates respectively, $p = 0.38$ and $0.90$ for the accuracy target and $p = 0.34$ and $0.30$ for sets completed; for the mistake rate, $p = 0.65$ without covariates, and the test cannot be computed with them). The difference in mistake rates shrinks once baseline performance is controlled for, and it comes from the class sample; there is none in the lab sample (Appendix~\ref{app:figures-tables}). The subsamples do not agree with each other either. In the lab sample, \SP{} participants responded significantly less than \LP{} participants in the probability of meeting the accuracy target ($p = 0.031$ without covariates and $0.19$ with them), but had slightly lower mistake rates, as the standard model predicts; in the class sample, \SP{} responded less in sets and mistake rates but not in the accuracy target. Finally, the \SP{} mistake rates differ from those in \Ctrl{} as well as \LP{}, which attenuation alone would not produce: attenuation moves \SP{} towards \Ctrl{}, not beyond it. Disengagement, that is, giving up on accuracy once the joint target seems out of reach, would produce it, and is in the spirit of the extended model. But sampling noise is an equally plausible explanation, since the macroeconomics class \SP{} group had the highest mean mistake rate (12\%) of any group in any sample.
-
-Two features of the design make attenuation hard to detect even if it exists. First, it is a fraction of a response that is itself only about one set: halving the \LP{} response would mean a difference of about 0.6 sets, against standard errors of 0.5--0.6 on each coefficient, so detecting it reliably would take a sample several times larger. Second, because no one could reach the speed target, the realised chance of meeting both targets was zero in both groups. Participants who discovered this during the task would have converged in their beliefs, shrinking the difference in $\mathbb{P}^E$ that the treatment was designed to create.
-
-\subsection{Secondary test: does an action plan strengthen the response?}
-
-\LN{} participants faced the same targets and assessment probabilities as \LP{} participants but were not shown the action plan. The extended model predicts a weaker response without the plan; the standard model predicts no difference. There is no consistent evidence of a difference. \LN{} raised sets completed by 1.4--1.6, slightly more than \LP{}, and its effect on the mistake rate is similar to that of \LP{}; for both outcomes the two groups' coefficients are within a fraction of a standard error of each other. The only hint of attenuation is in the probability of meeting the accuracy target, where the \LN{} coefficient is close to zero while the \LP{} coefficient is negative, but the gap is of the order of one standard error and sets completed point the other way. The distributions of both outcomes in the two groups are almost identical (Kolmogorov--Smirnov $p = 0.97$ for sets and $p = 1.0$ for the mistake rate). In the lab and class samples the comparison is imprecise and points in no consistent direction.
-
-The manipulation may simply not have changed how well participants understood the targets. Of the 285 participants who were shown the plan and answered the question, 107 said it did not make the targets easier or more motivating to achieve. Time spent on the instructions admits two readings. \LN{} participants spent far longer on them (143.30 seconds on average, against 59.34 for \LP{} and 52.32 for \SP{}). One reading is that participants with the table skimmed it rather than used it. Another is that participants without it spent the extra time working out the relation between sets and mistakes for themselves, so that both groups ended up with a similar plan. On the second reading the plan saved time rather than changing behaviour, and the cognitive complexity channel remains untested rather than refuted.
-
-\section{Conclusion}
-
-This paper asked whether reference points in different dimensions interact, which existing models rule out by assuming that gain--loss utility is additively separable across dimensions. I proposed an extension of the KR model in which the weight on gain--loss utility depends on the expected probability of meeting all targets jointly (the main channel) and on how easily the targets can be combined into one action plan (the secondary channel), and tested it in a real-effort experiment with a speed target and an accuracy target.
-
-The evidence is inconclusive. The targets raised speed modestly. Making the targets jointly harder to reach weakened the response in both dimensions, as the extended model predicts and contrary to the standard model, but not significantly, and the action plan made no difference. Whether the primed targets acted as reference points at all is itself uncertain: participants seemed to bring strong accuracy goals of their own, and a loss aversion check did not support a reference-point interpretation.
-
-The experiment suggests how a better test could be designed. The targets should be calibrated, with pilots on the actual subject pool, so that each is within reach; meeting them should carry real stakes; and the sample should be sized to detect differences between treated groups, not just the effect of the targets. The clearest lesson is that externally set targets compete with the goals people already hold. How people reconcile their own goals with targets set by others is a question for future work, with direct relevance to how organisations set targets for their employees.
-
-\newpage
-
-\printbibliography[heading=bibintoc, title={References}]
-
-\newpage
+\clearpage
 
 \appendix
 
@@ -568,6 +574,36 @@ The experiment suggests how a better test could be designed. The targets should 
 \renewcommand{\thetable}{\thesection\arabic{table}}
 
 \section{Figures and tables}\label{app:figures-tables}
+
+\begin{figure}[H]
+\centering
+\caption{Distributions of key performance metrics in the slider task across treatments (lab sample)}\label{fig:slider-performance-distribution-comparison-lab}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-lab-1}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_lab.pdf}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-lab-2}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_lab.pdf}
+\end{subfigure}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\caption{Distributions of key performance metrics in the slider task across treatments (class sample)}\label{fig:slider-performance-distribution-comparison-class}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-class-1}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_class.pdf}
+\end{subfigure}
+\begin{subfigure}{\linewidth}
+\centering
+\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-class-2}
+\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_class.pdf}
+\end{subfigure}
+\end{figure}
 
 \begin{table}[p]
 \centering
@@ -604,36 +640,6 @@ The experiment suggests how a better test could be designed. The targets should 
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
-
-\begin{figure}[H]
-\centering
-\caption{Distributions of key performance metrics in the slider task across treatments (lab sample)}\label{fig:slider-performance-distribution-comparison-lab}
-\begin{subfigure}{\linewidth}
-\centering
-\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-lab-1}
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_lab.pdf}
-\end{subfigure}
-\begin{subfigure}{\linewidth}
-\centering
-\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-lab-2}
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_lab.pdf}
-\end{subfigure}
-\end{figure}
-
-\begin{figure}[htbp]
-\centering
-\caption{Distributions of key performance metrics in the slider task across treatments (class sample)}\label{fig:slider-performance-distribution-comparison-class}
-\begin{subfigure}{\linewidth}
-\centering
-\caption{Sets completed}\label{fig:slider-performance-distribution-comparison-class-1}
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_sets_completed_class.pdf}
-\end{subfigure}
-\begin{subfigure}{\linewidth}
-\centering
-\caption{Mistake rate}\label{fig:slider-performance-distribution-comparison-class-2}
-\includegraphics[width=0.75\linewidth]{output/figures/dist_comp_mistake_rate_class.pdf}
-\end{subfigure}
-\end{figure}
 
 \begin{table}[p]
 \centering
