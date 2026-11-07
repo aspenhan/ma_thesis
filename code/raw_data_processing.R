@@ -361,11 +361,10 @@ unique(slider_data$race_other)
 
 slider_data <- slider_data %>%
   mutate(race_other_grouped = case_when(
-    race_other %in% c("South East Asian", "Indian") ~ "Asian",
+    race_other %in% c("South East Asian", "Indian", "central asian and south asian") ~ "Asian",
     race_other %in% c("Middle Eastern", "Middle Eastern (Arab)", "Arab") ~ "White",
     race_other %in% c("Latina") ~ "Hispanic",
-    race_other %in% c(NA, "prefer not to say") ~ NA,
-    TRUE ~ "Mixed",
+    T ~ "Other"
   ))
 
 slider_data <- slider_data %>%
@@ -400,7 +399,7 @@ slider_data <- slider_data %>%
 # Rename responses for occupation, recategorise responses for occupation_other and merge
 
 unique(slider_data$occupation)
-unique(slider_data$occupation)
+unique(slider_data$occupation_other)
 
 slider_data <- slider_data %>%
   mutate(occupation = case_when(
@@ -408,22 +407,16 @@ slider_data <- slider_data %>%
     occupation == "High-tech manufacturing and engineering" ~ "High-tech mfg or eng",
     TRUE ~ occupation))
 
-unique(slider_data$occupation_other)
-
 slider_data <- slider_data %>%
   mutate(occupation_other_grouped = case_when(
-    occupation_other %in% c("Educational Aide", "Early Education", "research", "education") ~ "Academia",
     occupation_other %in% c("Clerk", "Appointment setter") ~ "Clerical",
-    occupation_other %in% c("Legal", "accounting","Healthcare", "Medicine", "auction") ~ "Professional services",
-    occupation_other %in% c("Writer", "Freelance Digital Creator", "Customer Service",
-                            "Government", "Non profit") ~ "Other",
+    occupation_other %in% c("Legal", "accounting", "Medicine", "auction", "research") ~ "Professional services",
     occupation_other %in% c("Retired", "Retired Health Professional", "retired") ~ "Unemployed",
-    race_other %in% c(NA) ~ NA,
+    T ~ "Other"
   ))
 
 slider_data <- slider_data %>%
-  mutate(occupation = if_else(occupation == "Other", occupation_other_grouped, occupation),
-         occupation = if_else(occupation == "Agricultural", "Other", occupation))
+  mutate(occupation = if_else(occupation == "Other", occupation_other_grouped, occupation))
 
 levels(slider_data$occupation)
 
@@ -438,7 +431,7 @@ slider_data <- slider_data %>%
          econ = if_else(sample %in% c("micro", "macro"), "Yes", econ),
          econ = factor(econ, levels = c("No", "Yes")),
          occupation = if_else(sample %in% c("micro", "macro"), "Student", occupation),
-         occupation = factor(occupation, levels = c("Student", "Academia", "Clerical",
+         occupation = factor(occupation, levels = c("Student", "Academia", "Agricultural", "Clerical",
                                                     "High-tech mfg or eng",
                                                     "Managerial", "Professional services",
                                                     "Unemployed", "Other")))

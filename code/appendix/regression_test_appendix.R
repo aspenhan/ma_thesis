@@ -1,7 +1,6 @@
 # Appendix A1: regression estimates of treatment effects on effort for the lab and class samples
 # (counterparts of code/regression_test.R for the pooled sample), with tests of equality of treatment coefficients
 # Outputs: output/tables/reg_*_lab.tex, output/tables/reg_*_class.tex,
-#          output/numbers/regression_numbers_appendix.tex (p-values cited in the text),
 #          results/numbers_in_paper/coefficient_tests_lab.csv, results/numbers_in_paper/coefficient_tests_class.csv
 
 # ----- Setup -----
@@ -38,8 +37,6 @@ lab_groups <- regression_groups(slider_lab_data)
 
 lab_covariates <- c("gender", "race", "income", "edu", "econ", "occupation", "mouse")
 
-target_note <- "The outcome is meeting the accuracy target, that is, a recorded mistake rate of at most 10\\%."
-
 ## ----- Regression (1): accuracy target achievement -----
 
 reg_target_lab_basic <- glm(accuracy_target ~ treatment + criterion, family = binomial, data = slider_lab_data)
@@ -54,8 +51,7 @@ reg_target_lab_models <- list(reg_target_lab_basic, reg_target_lab_covariates, r
 
 save_regression_tex(reg_target_lab_models, "output/tables/reg_target_lab.tex",
                     outcome = "Log odds of meeting the accuracy target", coef_map = lab_coef_labels,
-                    groups = lab_groups, note_size = "",
-                    note = regression_note(reg_target_lab_models, slider_lab_data, "full", lab_covariates, target_note))
+                    groups = lab_groups)
 
 ## ----- Regression (2): mistake rate -----
 
@@ -71,8 +67,7 @@ reg_mistakes_lab_models <- list(reg_mistakes_lab_basic, reg_mistakes_lab_covaria
 
 save_regression_tex(reg_mistakes_lab_models, "output/tables/reg_mistakes_lab.tex",
                     outcome = "Mistake rate (\\%)", coef_map = lab_coef_labels,
-                    groups = lab_groups, note_size = "",
-                    note = regression_note(reg_mistakes_lab_models, slider_lab_data, "full", lab_covariates))
+                    groups = lab_groups)
 
 ## ----- Regression (3): sets completed -----
 
@@ -88,8 +83,7 @@ reg_sets_lab_models <- list(reg_sets_lab_basic, reg_sets_lab_covariates, reg_set
 
 save_regression_tex(reg_sets_lab_models, "output/tables/reg_sets_lab.tex",
                     outcome = "Sets completed", coef_map = lab_coef_labels,
-                    groups = lab_groups, note_size = "",
-                    note = regression_note(reg_sets_lab_models, slider_lab_data, "full", lab_covariates))
+                    groups = lab_groups)
 
 ## ----- Tests of equality of treatment coefficients -----
 
@@ -147,8 +141,7 @@ reg_target_class_models <- list(reg_target_class_basic, reg_target_class_covaria
 
 save_regression_tex(reg_target_class_models, "output/tables/reg_target_class.tex",
                     outcome = "Log odds of meeting the accuracy target", coef_map = class_coef_labels,
-                    groups = class_groups, note_size = "",
-                    note = regression_note(reg_target_class_models, slider_class_data, "full", class_covariates, target_note))
+                    groups = class_groups)
 
 ## ----- Regression (2): mistake rate -----
 
@@ -164,8 +157,7 @@ reg_mistakes_class_models <- list(reg_mistakes_class_basic, reg_mistakes_class_c
 
 save_regression_tex(reg_mistakes_class_models, "output/tables/reg_mistakes_class.tex",
                     outcome = "Mistake rate (\\%)", coef_map = class_coef_labels,
-                    groups = class_groups, note_size = "",
-                    note = regression_note(reg_mistakes_class_models, slider_class_data, "full", class_covariates))
+                    groups = class_groups)
 
 ## ----- Regression (3): sets completed -----
 
@@ -181,8 +173,7 @@ reg_sets_class_models <- list(reg_sets_class_basic, reg_sets_class_covariates, r
 
 save_regression_tex(reg_sets_class_models, "output/tables/reg_sets_class.tex",
                     outcome = "Sets completed", coef_map = class_coef_labels,
-                    groups = class_groups, note_size = "",
-                    note = regression_note(reg_sets_class_models, slider_class_data, "full", class_covariates))
+                    groups = class_groups)
 
 ## ----- Tests of equality of treatment coefficients -----
 
@@ -201,15 +192,3 @@ coefficient_tests_class <- tibble(
 print(coefficient_tests_class)
 
 write_with_retry(function() write_csv(coefficient_tests_class, "results/numbers_in_paper/coefficient_tests_class.csv"))
-
-# ----- Numbers cited in the text -----
-
-# Treatment 2 vs 3 coefficient tests cited in the text: only the lab sample's accuracy target tests
-# (e.g. CoefTestLabAccuracyTargetBaselinesPval); all the tests are in results/numbers_in_paper/coefficient_tests_*.csv
-
-coefficient_tests_lab_cited <- coefficient_tests_lab %>%
-  filter(outcome == "Accuracy target")
-
-write_tex_macros(p_value_macros(str_c(coefficient_tests_lab_cited$outcome, " ", coefficient_tests_lab_cited$model),
-                                coefficient_tests_lab_cited$p.value, "CoefTestLab"),
-                 "output/numbers/regression_numbers_appendix.tex")

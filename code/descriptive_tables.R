@@ -1,8 +1,8 @@
 # Sample descriptive statistics: sample sizes, covariate balance tables and joint balance tests,
 # slider task performance summary tables, and tests of performance differences between subsamples
 # Outputs: output/tables/covariates_sumstats_*.tex, output/tables/performance_sumstats*.tex,
-#          output/numbers/descriptive_numbers.tex (numbers cited in the text),
-#          results/numbers_in_paper/balance_tests.csv, results/numbers_in_paper/subsample_performance_tests.csv
+#          results/numbers_in_paper/sample_sizes.csv, results/numbers_in_paper/balance_tests.csv,
+#          results/numbers_in_paper/subsample_performance_tests.csv
 
 # ----- Setup -----
 
@@ -24,12 +24,13 @@ slider_data_full <- read_rds("data/slider_all_respondents_data.rds") #including 
 
 # ----- Sample sizes -----
 
-sample_sizes <- list(NumObs = nrow(slider_data),
-                     NumObsLab = nrow(slider_lab_data),
-                     NumObsClass = nrow(slider_data %>% filter(sample != "lab")),
-                     NumObsMicro = nrow(slider_micro_data),
-                     NumObsMacro = nrow(slider_macro_data),
-                     NumRespondents = nrow(slider_data_full))
+sample_sizes <- tibble(sample = c("pooled", "lab", "class", "micro", "macro", "all respondents"),
+                       n = c(nrow(slider_data), nrow(slider_lab_data), nrow(slider_data %>% filter(sample != "lab")),
+                             nrow(slider_micro_data), nrow(slider_macro_data), nrow(slider_data_full)))
+
+print(sample_sizes)
+
+write_with_retry(function() write_csv(sample_sizes, "results/numbers_in_paper/sample_sizes.csv"))
 
 # ----- Covariate balance tables -----
 
@@ -82,17 +83,6 @@ covariate_table <- function(data, vars, seed) {
     add_significance_stars(thresholds = star_levels) %>%
     modify_column_hide(columns = c(label, starts_with("stat_")))
 
-  # Table note
-
-  yes_no <- str_to_lower(covariate_names[intersect(c("econ", "mouse"), vars)])
-
-  note <- str_c("Each cell is the proportion of participants in the category, among those who answered the question ",
-                "(for ", prose_list(yes_no), ", the proportion answering yes), except for age, which is the mean. ",
-                "The p-values test for differences between the four treatment ",
-                "groups, using (a) Fisher's exact test, simulated with 10,000 replicates, and the Kruskal--Wallis test ",
-                "for age, and (b) Pearson's CHISQUARED test and Welch's one-way F test for age. ",
-                "*** p < 0.01, ** p < 0.05, * p < 0.1.")
-
   # Combine the tables
 
   tbl_merge(list(exact, asymptotic), tab_spanner = FALSE) %>%
@@ -103,7 +93,7 @@ covariate_table <- function(data, vars, seed) {
                   p.value_1 = "(a)", p.value_2 = "(b)") %>%
     modify_spanning_header(c(stat_1_1, stat_2_1, stat_3_1, stat_4_1) ~ "Treatment group",
                            c(p.value_1, p.value_2) ~ "p-value") %>%
-    finish_gt(note) %>%
+    finish_gt() %>%
     cols_width(label ~ px(170), starts_with("p.value") ~ px(56)) %>%
     tab_options(table.font.size = 12)
 }
@@ -210,11 +200,9 @@ performance_summary <- function(data, sample_name = NULL) {
   tbl
 }
 
-performance_note <- "Each cell is the mean, with the standard deviation in parentheses."
-
-save_performance_tex <- function(tbl, file, note = performance_note) {
+save_performance_tex <- function(tbl, file) {
   tbl %>%
-    finish_gt(note) %>%
+    finish_gt() %>%
     cols_width(label ~ px(120)) %>%
     tab_options(table.font.size = 14) %>%
     save_gt_tex(file)
@@ -235,8 +223,7 @@ save_performance_tex(performance_summary(slider_macro_data, "Macroeconomics clas
 tbl_stack(list(performance_summary(slider_data), performance_summary(slider_lab_data),
                performance_summary(slider_micro_data), performance_summary(slider_macro_data)),
           group_header = c("Pooled", "Lab", "Microeconomics class", "Macroeconomics class")) %>%
-  save_performance_tex("output/tables/performance_sumstats.tex",
-                       note = str_c(performance_note, " The pooled sample combines the lab and both class samples."))
+  save_performance_tex("output/tables/performance_sumstats.tex")
 
 # ----- Tests of performance differences between subsamples -----
 
@@ -272,14 +259,3 @@ subsample_performance_tests <- list(
 print(subsample_performance_tests, n = Inf)
 
 write_with_retry(function() write_csv(subsample_performance_tests, "results/numbers_in_paper/subsample_performance_tests.csv"))
-
-# ----- Numbers cited in the text -----
-
-# Joint balance tests for each sample (e.g. BalanceLabChisq and BalanceLabPval)
-
-balance_test_macros <- c(
-  set_names(as.list(round(balance_tests$chisq, 2)), str_c("Balance", str_to_title(balance_tests$sample), "Chisq")),
-  set_names(as.list(format_p_value(balance_tests$p.value)), str_c("Balance", str_to_title(balance_tests$sample), "Pval")))
-
-write_tex_macros(c(sample_sizes, balance_test_macros),
-                 "output/numbers/descriptive_numbers.tex")

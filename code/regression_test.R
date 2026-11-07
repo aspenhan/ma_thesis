@@ -1,8 +1,9 @@
 # Regression estimates of treatment effects on effort (pooled sample): regressions (1)-(3) on accuracy
 # target achievement, mistake rate and sets completed, tests of equality of treatment coefficients,
 # and regressions (4)-(6) interacting treatment 2 with loss aversion
-# Outputs: output/tables/reg_*.tex (main text tables and full appendix tables), output/numbers/regression_numbers.tex,
-#          results/numbers_in_paper/coefficient_tests_pooled.csv, results/numbers_in_paper/regression_sense_checks.csv
+# Outputs: output/tables/reg_*.tex (main text tables and full appendix tables),
+#          results/numbers_in_paper/coefficient_tests_pooled.csv, results/numbers_in_paper/regression_sense_checks.csv,
+#          results/numbers_in_paper/sets_completed_numbers.csv
 # Lab and class sample counterparts are in code/appendix/regression_test_appendix.R
 
 # ----- Setup -----
@@ -55,10 +56,6 @@ main_coefs <- coef_labels[c("treatment2", "treatment3", "treatment4")]
 main_control_rows <- list("Baselines" = c("No", "No", "Yes", "Yes"),
                           "Covariates" = c("No", "Yes", "No", "Yes"))
 
-# Outcome of the accuracy target regressions, described in their table notes
-
-target_note <- "The outcome is meeting the accuracy target, that is, a recorded mistake rate of at most 10\\%."
-
 # ----- Regression (1): accuracy target achievement -----
 
 ## ----- Create regression models -----
@@ -77,13 +74,11 @@ reg_target_models <- list(reg_target_basic, reg_target_covariates, reg_target_ba
 
 save_regression_tex(reg_target_models, "output/tables/reg_target.tex",
                     outcome = "Log odds of meeting the accuracy target", coef_map = main_coefs,
-                    control_rows = main_control_rows,
-                    note = regression_note(reg_target_models, slider_data, "main", pooled_covariates, target_note))
+                    control_rows = main_control_rows)
 
 save_regression_tex(reg_target_models, "output/tables/reg_target_full.tex",
                     outcome = "Log odds of meeting the accuracy target", coef_map = coef_labels,
-                    groups = full_groups, note_size = "",
-                    note = regression_note(reg_target_models, slider_data, "full", pooled_covariates, target_note))
+                    groups = full_groups)
 
 # ----- Regression (2): mistake rate -----
 
@@ -103,13 +98,11 @@ reg_mistakes_models <- list(reg_mistakes_basic, reg_mistakes_covariates, reg_mis
 
 save_regression_tex(reg_mistakes_models, "output/tables/reg_mistakes.tex",
                     outcome = "Mistake rate (\\%)", coef_map = main_coefs,
-                    control_rows = main_control_rows,
-                    note = regression_note(reg_mistakes_models, slider_data, "main", pooled_covariates))
+                    control_rows = main_control_rows)
 
 save_regression_tex(reg_mistakes_models, "output/tables/reg_mistakes_full.tex",
                     outcome = "Mistake rate (\\%)", coef_map = coef_labels,
-                    groups = full_groups, note_size = "",
-                    note = regression_note(reg_mistakes_models, slider_data, "full", pooled_covariates))
+                    groups = full_groups)
 
 # ----- Regression (3): sets completed -----
 
@@ -129,13 +122,11 @@ reg_sets_models <- list(reg_sets_basic, reg_sets_covariates, reg_sets_baselines,
 
 save_regression_tex(reg_sets_models, "output/tables/reg_sets.tex",
                     outcome = "Sets completed", coef_map = main_coefs,
-                    control_rows = main_control_rows,
-                    note = regression_note(reg_sets_models, slider_data, "main", pooled_covariates))
+                    control_rows = main_control_rows)
 
 save_regression_tex(reg_sets_models, "output/tables/reg_sets_full.tex",
                     outcome = "Sets completed", coef_map = coef_labels,
-                    groups = full_groups, note_size = "",
-                    note = regression_note(reg_sets_models, slider_data, "full", pooled_covariates))
+                    groups = full_groups)
 
 # ----- Tests of equality of treatment coefficients -----
 
@@ -204,8 +195,7 @@ reg_target_la_models <- list(reg_target_la_baselines, reg_target_la_full)
 
 save_regression_tex(reg_target_la_models, "output/tables/reg_target_la.tex",
                     outcome = "Log odds of meeting the accuracy target", coef_map = la_coefs,
-                    control_rows = la_control_rows,
-                    note = regression_note(reg_target_la_models, slider_data, "la", pooled_covariates, target_note))
+                    control_rows = la_control_rows)
 
 ## ----- Regression (5): mistake rate -----
 
@@ -217,8 +207,7 @@ reg_mistakes_la_models <- list(reg_mistakes_la_baselines, reg_mistakes_la_full)
 
 save_regression_tex(reg_mistakes_la_models, "output/tables/reg_mistakes_la.tex",
                     outcome = "Mistake rate (\\%)", coef_map = la_coefs,
-                    control_rows = la_control_rows,
-                    note = regression_note(reg_mistakes_la_models, slider_data, "la", pooled_covariates))
+                    control_rows = la_control_rows)
 
 ## ----- Regression (6): sets completed -----
 
@@ -230,8 +219,7 @@ reg_sets_la_models <- list(reg_sets_la_baselines, reg_sets_la_full)
 
 save_regression_tex(reg_sets_la_models, "output/tables/reg_sets_la.tex",
                     outcome = "Sets completed", coef_map = la_coefs,
-                    control_rows = la_control_rows,
-                    note = regression_note(reg_sets_la_models, slider_data, "la", pooled_covariates))
+                    control_rows = la_control_rows)
 
 ## ----- Loss aversion sense checks -----
 
@@ -248,39 +236,15 @@ regression_sense_checks %>%
 
 write_with_retry(function() write_csv(regression_sense_checks, "results/numbers_in_paper/regression_sense_checks.csv"))
 
-# ----- Numbers cited in the text -----
+# ----- Numbers cited in the text that are not in the tables -----
 
-write_tex_macros(c(
+# Mean sets completed in the control, and the adjusted R-squared of the sets completed regressions without controls and
+# with baselines (the tables report only the number of observations)
 
-  # Mean sets completed in the control
+sets_completed_numbers <- tibble(control_mean_sets = mean(slider_data$sets_completed[slider_data$treatment == 1]),
+                                 adj_r2_no_controls = reg_sets_basic$adj.r.squared,
+                                 adj_r2_baselines = reg_sets_baselines$adj.r.squared)
 
-  list(ControlMeanSets = round(mean(slider_data$sets_completed[slider_data$treatment == 1]), 2)),
+print(sets_completed_numbers)
 
-  # Adjusted R-squared of the sets completed regressions without controls and with baselines (no longer in the tables)
-
-  list(AdjRsqSetsNoControls = sprintf("%.2f", reg_sets_basic$adj.r.squared),
-       AdjRsqSetsBaselines = sprintf("%.2f", reg_sets_baselines$adj.r.squared)),
-
-  # Treatment 2 vs 3 coefficient tests (e.g. CoefTestPooledAccuracyTargetBaselinesPval)
-
-  p_value_macros(str_c(coefficient_tests_pooled$outcome, " ", coefficient_tests_pooled$model),
-                 coefficient_tests_pooled$p.value, "CoefTestPooled"),
-
-  # Cognitive complexity treatment sense checks
-
-  with(regression_sense_checks, list(
-    ExplanationNotHelpful = explanation_not_helpful,
-    ExplanationResponses = explanation_responses,
-    InstructionsTimeTreatmentOne = sprintf("%.2f", treatment1_instructions_time),
-    InstructionsTimeTreatmentTwo = sprintf("%.2f", treatment2_instructions_time),
-    InstructionsTimeTreatmentThree = sprintf("%.2f", treatment3_instructions_time),
-    InstructionsTimeTreatmentFour = sprintf("%.2f", treatment4_instructions_time),
-
-    # Loss aversion sense checks
-
-    LambdaEstimated = lambda_estimated,
-    LambdaOutOfBounds = lambda_above_bound + lambda_below_bound,
-    LambdaAboveBound = lambda_above_bound,
-    LambdaBelowBound = lambda_below_bound))),
-
-  "output/numbers/regression_numbers.tex")
+write_with_retry(function() write_csv(sets_completed_numbers, "results/numbers_in_paper/sets_completed_numbers.csv"))

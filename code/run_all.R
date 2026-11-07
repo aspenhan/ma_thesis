@@ -1,5 +1,5 @@
-# Run the full pipeline: clean the raw data, estimate loss aversion, then regenerate the tables, figures,
-# numbers and test results in output/ used by thesis_manuscript_latex.tex
+# Run the full pipeline: clean the raw data, estimate loss aversion, then regenerate the tables and figures in
+# output/ used by the LaTeX manuscripts, and the test results in results/ behind the numbers cited in the text
 # Run from the project root (e.g. open ma_thesis.Rproj), then upload output/ alongside the .tex file to Overleaf
 
 # ----- Setup -----

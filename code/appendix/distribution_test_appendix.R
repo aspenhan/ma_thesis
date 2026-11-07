@@ -1,7 +1,6 @@
 # Appendix A1: distributional comparisons of slider task performance between treatments for the
 # lab and class samples (counterparts of code/distribution_test.R for the pooled sample)
 # Outputs: output/figures/dist_comp_*_lab.pdf, output/figures/dist_comp_*_class.pdf,
-#          output/numbers/distribution_numbers_appendix.tex (p-values cited in the text),
 #          results/numbers_in_paper/distribution_tests_lab.csv, results/numbers_in_paper/distribution_tests_class.csv
 
 # ----- Setup -----
@@ -157,11 +156,3 @@ distribution_tests_class <- list(
 print(distribution_tests_class, n = Inf)
 
 write_with_retry(function() write_csv(distribution_tests_class, "results/numbers_in_paper/distribution_tests_class.csv"))
-
-# ----- Numbers cited in the text -----
-
-# P-values of each test (e.g. DistTestLabSetsCompletedOneVsFourPval)
-
-write_tex_macros(c(p_value_macros(distribution_tests_lab$test, distribution_tests_lab$p.value, "DistTestLab"),
-                   p_value_macros(distribution_tests_class$test, distribution_tests_class$p.value, "DistTestClass")),
-                 "output/numbers/distribution_numbers_appendix.tex")
